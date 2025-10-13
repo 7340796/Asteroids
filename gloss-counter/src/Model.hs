@@ -1,13 +1,15 @@
 -- | This module contains the data types
 --   which represent the state of the game
 module Model where
+import qualified Data.Set as S
+import Graphics.Gloss.Interface.IO.Game (Key)
 
 data Player = Player {
                 playerPosition     :: Point
               , playerDirection    :: Angle
               , playerSpeed        :: Float
               , acceleration       :: Float
-              , playerSize       :: Float -- grootte van de cirkel
+              , playerSize         :: Float -- grootte van de cirkel
              }
 data Enemy = Enemy {
                 enemyPosition  :: Point
@@ -45,7 +47,8 @@ data GameState = GameState {
                  , asteroids   :: [Asteroid]
                  , enemies     :: [Enemy]
                  , bullets     :: [Bullet]
+                 , keys        :: S.Set Key
                  }
 
 initialState :: GameState
-initialState = GameState 0 Start (Lives 3) (Score 0) (Player (Point 0 0) (Angle 0) 0 5 50) [] [] []
+initialState = GameState 0 Start (Lives 3) (Score 0) (Player (Point 0 0) (Angle 0) 0 5 50) [] [] [] S.empty
