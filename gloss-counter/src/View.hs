@@ -17,7 +17,8 @@ viewPure gstate = translate (x point) (y point) picture
     y (Point _ b) = b 
 
 
-
+-- color red (circle (playerSize (player gstate)))
+-- color red (text (show (playerDirection (player gstate))))
 
 {- viewPure :: GameState -> Picture
 viewPure gstate = case infoToShow gstate of
