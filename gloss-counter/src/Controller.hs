@@ -27,8 +27,24 @@ step secs gstate
 input :: Event -> GameState -> IO GameState
 input e gstate = return (inputKey e gstate)
 
+-- inputKey :: Event -> GameState -> GameState
+-- inputKey (EventKey (Char c) _ _ _) gstate
+--   = -- If the user presses a character key, show that one
+--     gstate { score = Score 7}
+-- inputKey _ gstate = gstate -- Otherwise keep the same
+
 inputKey :: Event -> GameState -> GameState
-inputKey (EventKey (Char c) _ _ _) gstate
-  = -- If the user presses a character key, show that one
-    gstate { score = Score 7}
-inputKey _ gstate = gstate -- Otherwise keep the same
+inputKey (EventKey (Char c) Down _ _) gstate
+  = case c of 
+    'w' -> gstate {player = moves (player gstate) North}
+    'a' -> gstate {player = moves (player gstate) West}
+    's' -> gstate {player = moves (player gstate) South}
+    'd' -> gstate {player = moves (player gstate) East}
+    _ -> gstate --other characters do not trigger movement
+inputKey _ gstate = gstate -- when there is no input
+
+moves :: Player -> Direction -> Player
+moves p@(Player {playerPosition = Point x y}) North = p{ playerPosition = Point x (y + 10)}
+moves p@(Player {playerPosition = Point x y}) East  = p{ playerPosition = Point (x + 10) y}
+moves p@(Player {playerPosition = Point x y}) South = p{ playerPosition = Point x (y - 10)}
+moves p@(Player {playerPosition = Point x y}) West  = p{ playerPosition = Point (x -10) y}

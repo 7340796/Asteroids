@@ -30,6 +30,7 @@ newtype Angle  = Angle Float
 newtype Lives  = Lives Int
 newtype Score  = Score Float
 data State  = Start | Playing | Paused | GameOver
+data Direction = North | East | South | West
 
 
 nO_SECS_BETWEEN_CYCLES :: Float

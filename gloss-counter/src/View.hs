@@ -9,7 +9,15 @@ view :: GameState -> IO Picture
 view = return . viewPure
 
 viewPure :: GameState -> Picture
-viewPure gstate = color red (circle (playerSize (player gstate)))
+viewPure gstate = translate (x point) (y point) picture
+  where
+    picture = color red (circle (playerSize (player gstate)))
+    point = playerPosition (player gstate)
+    x (Point a _) = a
+    y (Point _ b) = b 
+
+
+
 
 {- viewPure :: GameState -> Picture
 viewPure gstate = case infoToShow gstate of
