@@ -26,6 +26,7 @@ data Asteroid = Asteroid {
                 asteroidPosition  :: Point
               , asteroidDirection :: Angle
               , asteroidSpeed     :: Float
+              , asteroidSize      :: Float 
              }
 data Point  = Point Float Float
   deriving (Show)
@@ -54,4 +55,6 @@ data GameState = GameState {
                  }
 
 initialState :: GameState
-initialState = GameState 0 Start (Lives 3) (Score 0) (Player (Point 0 0) (Angle 90) 0 1 50) [] [] [] S.empty
+initialState = GameState 0 Start (Lives 3) (Score 0) (Player (Point 0 0) (Angle 90) 0 1 50) asteroidlist [] [] S.empty
+  where 
+    asteroidlist = [(Asteroid (Point 0 0) (Angle 90) 1 30)]

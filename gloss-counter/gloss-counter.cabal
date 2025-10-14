@@ -18,4 +18,5 @@ executable gloss-counter
                      , Model
                      , View
 		                 , Player
+                     , Asteroid
   default-language:    Haskell2010

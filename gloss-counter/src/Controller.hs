@@ -3,18 +3,18 @@
 module Controller where
 
 import Model
-
 import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Game 
 import System.Random
 import qualified Data.Set as S -- import datatype Set
 import Player
+import Asteroid
 
 -- | Handle one iteration of the game
 step :: Float -> GameState -> IO GameState
 step secs gstate
   = do 
-    return (updatePlayer gstate)
+    return (updateAsteroids (updatePlayer gstate))
 
 -- | Handle user input
 input :: Event -> GameState -> IO GameState

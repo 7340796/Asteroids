@@ -9,13 +9,26 @@ view :: GameState -> IO Picture
 view = return . viewPure
 
 viewPure :: GameState -> Picture
-viewPure gstate = translate (x point) (y point) picture
-  where
+viewPure gstate = pictures (playerCircle gstate : (asteroidCircles gstate))
+
+playerCircle :: GameState -> Picture
+playerCircle gstate = translate (x point) (y point) picture
+ where
     picture = color red (circle (playerSize (player gstate)))
     point = playerPosition (player gstate)
     x (Point a _) = a
     y (Point _ b) = b 
 
+asteroidCircles :: GameState -> [Picture]
+asteroidCircles gstate = map asteroidCircle (asteroids gstate)
+
+asteroidCircle :: Asteroid -> Picture
+asteroidCircle ast = translate (x point) (y point) picture
+  where
+    picture = color green (circle (asteroidSize ast))
+    point = asteroidPosition ast
+    x (Point a _) = a
+    y (Point _ b) = b
 
 -- color red (circle (playerSize (player gstate)))
 -- color red (text (show (playerDirection (player gstate))))
