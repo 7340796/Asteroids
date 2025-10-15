@@ -57,6 +57,6 @@ data GameState = GameState {
                  }
 
 initialState :: StdGen -> GameState
-initialState gen = GameState { elapsedTime = 0, state = Start, lives = Lives 3, score = Score 0, player = (Player { playerPosition = Point 0 0, playerDirection = Angle 90, playerSpeed = 0, acceleration = 1, playerSize = 50 }), asteroids = asteroidlist, enemies = [], bullets = [], keys = S.empty, rg = gen }
+initialState gen = GameState 0 Start (Lives 3) (Score 0) (Player (Point 0 0) (Angle 90) 0 1 50) asteroidlist [] [] S.empty gen
   where 
     asteroidlist = []
