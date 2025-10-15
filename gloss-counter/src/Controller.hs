@@ -14,7 +14,7 @@ import Asteroid
 step :: Float -> GameState -> IO GameState
 step secs gstate
   = do 
-    return (updateAsteroids (updatePlayer gstate))
+     return $ updateAsteroids (updatePlayer gstate)
 
 -- | Handle user input
 input :: Event -> GameState -> IO GameState
