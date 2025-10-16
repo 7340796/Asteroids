@@ -15,7 +15,7 @@ import Bullet
 step :: Float -> GameState -> IO GameState
 step secs gstate
   = do 
-     return $ updateBullets (updateAsteroids (updatePlayer gstate))
+     return $ (updateBullets (updateAsteroids (updatePlayer gstate))){elapsedTime = (elapsedTime gstate) + secs}
 
 -- | Handle user input
 input :: Event -> GameState -> IO GameState

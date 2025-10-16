@@ -19,4 +19,5 @@ executable gloss-counter
                      , View
 		                 , Player
                      , Asteroid
+                     , Bullet
   default-language:    Haskell2010

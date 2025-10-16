@@ -24,6 +24,12 @@ turnHelper k gstate =
     (SpecialKey KeySpace) -> gstate {bullets = (spawnBullet gstate) : (bullets gstate)}
     _ -> gstate
 
+-- playerShoot :: GameState -> GameState
+-- playerShoot gstate = gstate {bullets = (spawnBullet gstate) : (bullets gstate)}
+--   where 
+--     delay = 
+    
+
 --Set the player speed when slowing down
 playerSlowDown :: Player -> Player
 playerSlowDown  p@(Player {playerSpeed = v}) = p{playerSpeed = newSpeed}
