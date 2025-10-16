@@ -20,4 +20,5 @@ executable gloss-counter
 		                 , Player
                      , Asteroid
                      , Bullet
+                     , BoundingBox
   default-language:    Haskell2010

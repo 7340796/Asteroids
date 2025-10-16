@@ -38,7 +38,7 @@ newtype Angle  = Angle Float
 newtype Lives  = Lives Int
 newtype Score  = Score Float
 data State  = Start | Playing | Paused | GameOver
-data Direction = North | East | South | West
+data HitBox = HitBox Float Point
 
 
 nO_SECS_BETWEEN_CYCLES :: Float
@@ -61,3 +61,4 @@ initialState :: StdGen -> GameState
 initialState gen = GameState 0 Start (Lives 3) (Score 0) (Player (Point 0 0) (Angle 90) 0 1 50) asteroidlist [] [] S.empty gen
   where 
     asteroidlist = []
+
