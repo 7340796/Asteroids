@@ -9,12 +9,13 @@ import System.Random
 import qualified Data.Set as S -- import datatype Set
 import Player
 import Asteroid
+import Bullet
 
 -- | Handle one iteration of the game
 step :: Float -> GameState -> IO GameState
 step secs gstate
   = do 
-     return $ updateAsteroids (updatePlayer gstate)
+     return $ updateBullets (updateAsteroids (updatePlayer gstate))
 
 -- | Handle user input
 input :: Event -> GameState -> IO GameState

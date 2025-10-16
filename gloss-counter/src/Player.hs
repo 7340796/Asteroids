@@ -2,7 +2,8 @@ module Player where
 import qualified Data.Set as S
 import Model
 import Graphics.Gloss
-import Graphics.Gloss.Interface.IO.Game 
+import Graphics.Gloss.Interface.IO.Game
+import Bullet 
 
 --Go through the list of pressed keys and update the gamestate accordingly
 updatePlayer :: GameState -> GameState
@@ -18,8 +19,9 @@ turn s gstate = foldr turnHelper gstate s
 turnHelper :: Key -> GameState -> GameState
 turnHelper k gstate = 
   case k of
-    (Char 'a') -> gstate {player = (player gstate){playerDirection = steerLeft (player gstate)}} 
-    (Char 'd') -> gstate {player = (player gstate){playerDirection = steerRight (player gstate)}}
+    (Char 'a')            -> gstate {player = (player gstate){playerDirection = steerLeft (player gstate)}} 
+    (Char 'd')            -> gstate {player = (player gstate){playerDirection = steerRight (player gstate)}}
+    (SpecialKey KeySpace) -> gstate {bullets = (spawnBullet gstate) : (bullets gstate)}
     _ -> gstate
 
 --Set the player speed when slowing down

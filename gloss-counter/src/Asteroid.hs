@@ -8,10 +8,10 @@ updateAsteroids gstate@(GameState{asteroids = asteroids }) | null asteroids = mo
                                                            | otherwise = moveForward gstate 
 
 moveForward :: GameState -> GameState
-moveForward gstate = gstate {asteroids = map updatePosition (asteroids gstate)}
+moveForward gstate = gstate {asteroids = map updateAsteroidPosition (asteroids gstate)}
 
-updatePosition :: Asteroid -> Asteroid
-updatePosition ast@(Asteroid {asteroidSpeed = v, asteroidDirection = Angle a, asteroidPosition = Point x y}) = ast{asteroidPosition = newPosition}  
+updateAsteroidPosition :: Asteroid -> Asteroid
+updateAsteroidPosition ast@(Asteroid {asteroidSpeed = v, asteroidDirection = Angle a, asteroidPosition = Point x y}) = ast{asteroidPosition = newPosition}  
     where 
     xComponent  = cos (convert a)
     yComponent  = sin (convert a)
