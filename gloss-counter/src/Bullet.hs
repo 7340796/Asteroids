@@ -6,6 +6,10 @@ updateBullets gstate = gstate{bullets = updatedBullets}
   where 
     updatedBullets = map updateBulletPosition (bullets gstate)
 
+instance Entity Bullet where
+  updatePosition = updateBulletPosition
+  getHitbox bul  = HitBox (bulletSize bul) (bulletPosition bul)
+
 updateBulletPosition :: Bullet -> Bullet
 updateBulletPosition bul@(Bullet {bulletSpeed = v, bulletDirection = Angle a, bulletPosition = Point x y}) = bul{bulletPosition = newPosition}
   where
@@ -15,6 +19,8 @@ updateBulletPosition bul@(Bullet {bulletSpeed = v, bulletDirection = Angle a, bu
     newPosition = Point (xComponent * v + x) (yComponent * v + y)
 
 spawnBullet :: GameState -> Bullet
-spawnBullet gstate = Bullet {bulletPosition = (playerPosition player'), bulletDirection = (playerDirection player'), bulletSpeed = 10, bulletSize = 5}
+spawnBullet gstate = Bullet {bulletPosition = playerPosition player', bulletDirection = playerDirection player', bulletSpeed = 10, bulletSize = 5}
     where 
         player' = player gstate 
+
+

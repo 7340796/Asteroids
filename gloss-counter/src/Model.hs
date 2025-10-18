@@ -35,7 +35,6 @@ data Point  = Point Float Float
 data Vector = Vector Float Float 
 newtype Angle  = Angle Float
   deriving (Show) 
-newtype Lives  = Lives Int
 newtype Score  = Score Float
 data State  = Start | Playing | Paused | GameOver
 data HitBox = HitBox Float Point
@@ -47,7 +46,7 @@ nO_SECS_BETWEEN_CYCLES = 5
 data GameState = GameState {
                    elapsedTime :: Float
                  , state       :: State
-                 , lives       :: Lives
+                 , lives       :: Int
                  , score       :: Score 
                  , player      :: Player 
                  , asteroids   :: [Asteroid]
@@ -58,7 +57,10 @@ data GameState = GameState {
                  }
 
 initialState :: StdGen -> GameState
-initialState gen = GameState 0 Start (Lives 3) (Score 0) (Player (Point 0 0) (Angle 90) 0 1 50) asteroidlist [] [] S.empty gen
+initialState gen = GameState { elapsedTime = 0, state = Start, lives = 3, score = (Score 0), player = (Player (Point 0 0) (Angle 90) 0 1 50), asteroids = asteroidlist, enemies = [], bullets = [], keys = S.empty, rg = gen }
   where 
     asteroidlist = []
 
+class Entity a where
+  updatePosition :: a -> a
+  getHitbox :: a -> HitBox

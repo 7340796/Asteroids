@@ -44,7 +44,9 @@ playerAccelerate p@(Player {playerSpeed = v}) = p{playerSpeed = newSpeed}
     newSpeed       | v < maxSpeed = v + acceleration p
                    | otherwise = v
     maxSpeed       = 10 
-
+instance Entity Player where 
+  updatePosition = updatePlayerPosition
+  getHitbox p    = HitBox (playerSize p) (playerPosition p)
 --Set the new player position
 updatePlayerPosition :: Player -> Player
 updatePlayerPosition p@(Player {playerDirection = Angle a, playerSpeed = v, playerPosition = Point x y}) = p{playerPosition = newPosition} 

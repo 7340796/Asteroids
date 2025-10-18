@@ -10,6 +10,10 @@ updateAsteroids gstate@(GameState{asteroids = asteroids }) | null asteroids = mo
 moveForward :: GameState -> GameState
 moveForward gstate = gstate {asteroids = map updateAsteroidPosition (asteroids gstate)}
 
+instance Entity Asteroid where
+  updatePosition = updateAsteroidPosition
+  getHitbox ast = HitBox (asteroidSize ast) (asteroidPosition ast)
+
 updateAsteroidPosition :: Asteroid -> Asteroid
 updateAsteroidPosition ast@(Asteroid {asteroidSpeed = v, asteroidDirection = Angle a, asteroidPosition = Point x y}) = ast{asteroidPosition = newPosition}  
     where 
