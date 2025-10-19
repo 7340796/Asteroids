@@ -5,7 +5,7 @@ import GHC.Float
 updateBullets :: GameState -> GameState
 updateBullets gstate = gstate{bullets = updatedBullets}
   where 
-    updatedBullets = map (\x -> updateBulletPosition x gstate) (bullets gstate)
+    updatedBullets = map (\x -> updateBulletPosition x  gstate) (bullets (updateLife gstate))
 
 instance Entity Bullet where
   updatePosition = updateBulletPosition
@@ -28,7 +28,7 @@ updateBulletPosition bul@(Bullet {bulletSpeed = v, bulletDirection = Angle a, bu
     maxY = int2Float (snd (screenSize gstate)) /2
 
 spawnBullet :: GameState -> Bullet
-spawnBullet gstate = Bullet {bulletPosition = spawnPosition, bulletDirection = playerDirection player', bulletSpeed = 13, bulletSize = 5}
+spawnBullet gstate = Bullet {bulletPosition = spawnPosition, bulletDirection = playerDirection player', bulletSpeed = 18, bulletSize = 5, lifeTime = 30}
     where 
         player' = player gstate 
         spawnDirection = playerDirection (player gstate)
@@ -39,3 +39,9 @@ spawnBullet gstate = Bullet {bulletPosition = spawnPosition, bulletDirection = p
         x (Point x y) = x
         y (Point x y) = y
 
+updateLife :: GameState -> GameState
+updateLife gstate = gstate{bullets = filter isAlive updatedBullets}
+  where
+    isAlive bul        = lifeTime bul > 0 
+    updatedBullets     = map updateLifeTime (bullets gstate)
+    updateLifeTime bul = bul{lifeTime = lifeTime bul - 1}

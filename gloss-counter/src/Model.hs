@@ -23,6 +23,7 @@ data Bullet = Bullet {
               , bulletDirection :: Angle
               , bulletSpeed     :: Float 
               , bulletSize      :: Float
+              , lifeTime        :: Int
              }
 data Asteroid = Asteroid {
                 asteroidPosition  :: Point
