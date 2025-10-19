@@ -10,7 +10,7 @@ view :: GameState -> IO Picture
 view = return . viewPure
 
 viewPure :: GameState -> Picture
-viewPure gstate = pictures (displayLives gstate : playerCircle gstate : (asteroidCircles gstate) ++ (bulletCircles gstate))
+viewPure gstate = pictures (displayScore gstate : displayLives gstate : playerCircle gstate : (asteroidCircles gstate) ++ (bulletCircles gstate))
 
 playerCircle :: GameState -> Picture
 playerCircle gstate = translate (x point) (y point) picture
@@ -46,6 +46,11 @@ displayLives :: GameState -> Picture
 displayLives gstate = translate (- int2Float(fst (screenSize gstate))/2) (- int2Float(snd (screenSize gstate))/2) picture
    where
     picture = color yellow( text (show (lives gstate)))
+
+displayScore :: GameState -> Picture
+displayScore gstate = translate (- int2Float(fst (screenSize gstate))/2 + 80) (- int2Float(snd (screenSize gstate))/2) picture
+   where
+    picture = color red( text (show (score gstate)))
 
 -- color red (circle (playerSize (player gstate)))
 -- color red (text (show (playerDirection (player gstate))))

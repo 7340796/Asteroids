@@ -31,7 +31,8 @@ handleInput (EventKey k Up _ _) gstate   = gstate {keys = S.delete k (keys gstat
 handleInput _ gstate                     = gstate
 
 checkForCollisions :: GameState -> GameState
-checkForCollisions gstate = gstate{asteroids = newAsteroidList, bullets = newBulletList, score = newScore, lives = newLives}--, enemies = newEnemyList} --}
+checkForCollisions gstate | lives gstate > 0 = gstate{asteroids = newAsteroidList, bullets = newBulletList, score = newScore, lives = newLives}--, enemies = newEnemyList} --
+                          | otherwise = gstate{state = GameOver}
   where
     newAsteroidList = filter (\x -> not $ any (\y -> bulletHitsAsteroid y x) (bullets gstate)) (asteroids gstate) \\ filter (playerHitsAsteroid (player gstate)) (asteroids gstate)
     newBulletList   = filter (\x -> not $ any (\y -> bulletHitsAsteroid x y || bulletHitsPlayer x (player gstate)) (asteroids gstate)) (bullets gstate)
