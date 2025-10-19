@@ -24,20 +24,20 @@ updateBulletPosition bul@(Bullet {bulletSpeed = v, bulletDirection = Angle a, bu
     boundsPositionY newPosition@(Point x y) | y > maxY = -y
                                             | y < -maxY = -y
                                             | otherwise = y
-    maxX = int2Float ( fst (screenSize gstate)) /2
-    maxY = int2Float (snd (screenSize gstate)) /2
+    maxX        = int2Float ( fst (screenSize gstate)) /2
+    maxY        = int2Float (snd (screenSize gstate)) /2
 
 spawnBullet :: GameState -> Bullet
 spawnBullet gstate = Bullet {bulletPosition = spawnPosition, bulletDirection = playerDirection player', bulletSpeed = 18, bulletSize = 5, lifeTime = 30}
     where 
-        player' = player gstate 
-        spawnDirection = playerDirection (player gstate)
+        player'           = player gstate 
+        spawnDirection    = playerDirection (player gstate)
         convert (Angle a) = a * pi / 180
-        spawnPosition = Point (xComponent * playerSize (player gstate) + x (playerPosition (player gstate))) (yComponent * playerSize (player gstate) + y (playerPosition (player gstate)))
-        xComponent = cos (convert spawnDirection)
-        yComponent = sin(convert spawnDirection)
-        x (Point x y) = x
-        y (Point x y) = y
+        spawnPosition     = Point (xComponent * playerSize (player gstate) + x (playerPosition (player gstate))) (yComponent * playerSize (player gstate) + y (playerPosition (player gstate)))
+        xComponent        = cos (convert spawnDirection)
+        yComponent        = sin(convert spawnDirection)
+        x (Point x y)     = x
+        y (Point x y)     = y
 
 updateLife :: GameState -> GameState
 updateLife gstate = gstate{bullets = filter isAlive updatedBullets}

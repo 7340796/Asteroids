@@ -12,7 +12,7 @@ updatePlayer gstate =  turn (keys gstate) (moveForward (keys gstate) gstate)
 
 moveForward :: S.Set Key -> GameState -> GameState
 moveForward s gstate | S.member (Char 'w') s = gstate{player = updatePlayerPosition (playerAccelerate (player gstate)) gstate}
-                     | otherwise           = gstate{player = updatePlayerPosition (playerSlowDown (player gstate)) gstate}
+                     | otherwise             = gstate{player = updatePlayerPosition (playerSlowDown (player gstate)) gstate}
 
 turn :: S.Set Key -> GameState -> GameState
 turn s gstate = foldr turnHelper gstate s
@@ -20,16 +20,10 @@ turn s gstate = foldr turnHelper gstate s
 turnHelper :: Key -> GameState -> GameState
 turnHelper k gstate =
   case k of
-    (Char 'a')            -> gstate {player = (player gstate){playerDirection = steerLeft (player gstate)}}
-    (Char 'd')            -> gstate {player = (player gstate){playerDirection = steerRight (player gstate)}}
+    (Char 'a')            -> gstate {player  = (player gstate){playerDirection = steerLeft (player gstate)}}
+    (Char 'd')            -> gstate {player  = (player gstate){playerDirection = steerRight (player gstate)}}
     (SpecialKey KeySpace) -> gstate {bullets = spawnBullet gstate : bullets gstate, keys = S.delete (SpecialKey KeySpace) (keys gstate) }
-    _ -> gstate
-
--- playerShoot :: GameState -> GameState
--- playerShoot gstate = gstate {bullets = (spawnBullet gstate) : (bullets gstate)}
---   where 
---     delay = 
-
+    _                     -> gstate
 
 --Set the player speed when slowing down
 playerSlowDown :: Player -> Player
