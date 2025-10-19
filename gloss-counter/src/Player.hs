@@ -3,7 +3,7 @@ import qualified Data.Set as S
 import Model
 import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Game
-import Bullet 
+import Bullet
 import GHC.Float (int2Float)
 
 --Go through the list of pressed keys and update the gamestate accordingly
@@ -18,18 +18,18 @@ turn :: S.Set Key -> GameState -> GameState
 turn s gstate = foldr turnHelper gstate s
 
 turnHelper :: Key -> GameState -> GameState
-turnHelper k gstate = 
+turnHelper k gstate =
   case k of
-    (Char 'a')            -> gstate {player = (player gstate){playerDirection = steerLeft (player gstate)}} 
+    (Char 'a')            -> gstate {player = (player gstate){playerDirection = steerLeft (player gstate)}}
     (Char 'd')            -> gstate {player = (player gstate){playerDirection = steerRight (player gstate)}}
-    (SpecialKey KeySpace) -> gstate {bullets = (spawnBullet gstate) : (bullets gstate)}
+    (SpecialKey KeySpace) -> gstate {bullets = spawnBullet gstate : bullets gstate, keys = S.delete (SpecialKey KeySpace) (keys gstate) }
     _ -> gstate
 
 -- playerShoot :: GameState -> GameState
 -- playerShoot gstate = gstate {bullets = (spawnBullet gstate) : (bullets gstate)}
 --   where 
 --     delay = 
-    
+
 
 --Set the player speed when slowing down
 playerSlowDown :: Player -> Player
@@ -41,17 +41,17 @@ playerSlowDown  p@(Player {playerSpeed = v}) = p{playerSpeed = newSpeed}
 --Set the player speed when speeding up
 playerAccelerate :: Player -> Player
 playerAccelerate p@(Player {playerSpeed = v}) = p{playerSpeed = newSpeed}
-  where 
+  where
     newSpeed       | v < maxSpeed = v + acceleration p
                    | otherwise = v
-    maxSpeed       = 10 
-instance Entity Player where 
+    maxSpeed       = 10
+instance Entity Player where
   updatePosition = updatePlayerPosition
   getHitbox p    = HitBox (playerSize p) (playerPosition p)
 --Set the new player position
 updatePlayerPosition :: Player -> GameState -> Player
-updatePlayerPosition p@(Player {playerDirection = Angle a, playerSpeed = v, playerPosition = Point x y}) gstate = p{playerPosition =  Point (boundsPositionX newPosition) (boundsPositionY newPosition)} 
-  where 
+updatePlayerPosition p@(Player {playerDirection = Angle a, playerSpeed = v, playerPosition = Point x y}) gstate = p{playerPosition =  Point (boundsPositionX newPosition) (boundsPositionY newPosition)}
+  where
     xComponent  = cos (convert a)
     yComponent  = sin (convert a)
     convert a   = a * pi / 180 --convert from degrees to radials
@@ -71,5 +71,5 @@ steerLeft p@(Player {playerDirection = Angle a}) | a + 5 > 360 = Angle (a + 5 - 
                                                  | otherwise    = Angle (a + 5)
 
 steerRight :: Player -> Angle
-steerRight p@(Player {playerDirection = Angle a}) | a - 5 < 0 = Angle(a - 5 + 360)
+steerRight p@(Player {playerDirection = Angle a}) | a - 5 < 0 = Angle (a - 5 + 360)
                                                   | otherwise  = Angle (a - 5)
