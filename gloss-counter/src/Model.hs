@@ -29,12 +29,13 @@ data Asteroid = Asteroid {
               , asteroidDirection :: Angle
               , asteroidSpeed     :: Float
               , asteroidSize      :: Float 
-             }
+             } 
+  deriving (Eq)
 data Point  = Point Float Float
-  deriving (Show)
+  deriving (Show, Eq)
 data Vector = Vector Float Float 
 newtype Angle  = Angle Float
-  deriving (Show) 
+  deriving (Show, Eq) 
 data State  = Start | Playing | Paused | GameOver
 data HitBox = HitBox Float Point
 

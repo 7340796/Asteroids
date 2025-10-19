@@ -28,8 +28,14 @@ updateBulletPosition bul@(Bullet {bulletSpeed = v, bulletDirection = Angle a, bu
     maxY = int2Float (snd (screenSize gstate)) /2
 
 spawnBullet :: GameState -> Bullet
-spawnBullet gstate = Bullet {bulletPosition = playerPosition player', bulletDirection = playerDirection player', bulletSpeed = 10, bulletSize = 5}
+spawnBullet gstate = Bullet {bulletPosition = spawnPosition, bulletDirection = playerDirection player', bulletSpeed = 13, bulletSize = 5}
     where 
         player' = player gstate 
-
+        spawnDirection = playerDirection (player gstate)
+        convert (Angle a) = a * pi / 180
+        spawnPosition = Point (xComponent * playerSize (player gstate) + x (playerPosition (player gstate))) (yComponent * playerSize (player gstate) + y (playerPosition (player gstate)))
+        xComponent = cos (convert spawnDirection)
+        yComponent = sin(convert spawnDirection)
+        x (Point x y) = x
+        y (Point x y) = y
 

@@ -4,12 +4,13 @@ module View where
 
 import Graphics.Gloss
 import Model
+import GHC.Float (int2Float)
 
 view :: GameState -> IO Picture
 view = return . viewPure
 
 viewPure :: GameState -> Picture
-viewPure gstate = pictures (playerCircle gstate : (asteroidCircles gstate) ++ (bulletCircles gstate))
+viewPure gstate = pictures (displayLives gstate : playerCircle gstate : (asteroidCircles gstate) ++ (bulletCircles gstate))
 
 playerCircle :: GameState -> Picture
 playerCircle gstate = translate (x point) (y point) picture
@@ -41,6 +42,10 @@ bulletCircle bul = translate (x point) (y point) picture
       x (Point a _) = a
       y (Point _ b) = b
 
+displayLives :: GameState -> Picture
+displayLives gstate = translate (- int2Float(fst (screenSize gstate))/2) (- int2Float(snd (screenSize gstate))/2) picture
+   where
+    picture = color yellow( text (show (lives gstate)))
 
 -- color red (circle (playerSize (player gstate)))
 -- color red (text (show (playerDirection (player gstate))))

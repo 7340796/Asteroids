@@ -12,6 +12,7 @@ import Asteroid
 import Bullet
 import BoundingBox (doesIntersect)
 import Graphics.Gloss.Interface.Environment (getScreenSize)
+import Data.List
 
 -- | Handle one iteration of the game
 step :: Float -> GameState -> IO GameState
@@ -32,11 +33,12 @@ handleInput _ gstate                     = gstate
 checkForCollisions :: GameState -> GameState
 checkForCollisions gstate = gstate{asteroids = newAsteroidList, bullets = newBulletList, score = newScore, lives = newLives}--, enemies = newEnemyList} --}
   where
-    newAsteroidList = filter (\x -> not $ any (\y -> bulletHitsAsteroid y x ) (bullets gstate)) (asteroids gstate)
-    newBulletList   = filter (\x -> not $ any (\y -> bulletHitsAsteroid x y ) (asteroids gstate)) (bullets gstate)
+    newAsteroidList = filter (\x -> not $ any (\y -> bulletHitsAsteroid y x) (bullets gstate)) (asteroids gstate) \\ filter (playerHitsAsteroid (player gstate)) (asteroids gstate)
+    newBulletList   = filter (\x -> not $ any (\y -> bulletHitsAsteroid x y || bulletHitsPlayer x (player gstate)) (asteroids gstate)) (bullets gstate)
     newScore        | length newAsteroidList < length (asteroids gstate) = (score gstate) + 20
                     | otherwise                                          = score gstate
     newLives        | any (\x -> bulletHitsPlayer x (player gstate)) (bullets gstate) || any (playerHitsAsteroid (player gstate)) (asteroids gstate) = lives gstate - 1
+                    | otherwise = lives gstate
     -- newEnemyList    | null $ bullets gstate = enemies gstate
     --                 | otherwise =  [x | x <- enemies gstate  , y <- bullets gstate, not $ bulletHitsEnemy y x]
 
