@@ -62,5 +62,5 @@ initialState gen screenSize = GameState { elapsedTime = 0, state = Start, lives 
     asteroidlist = []
 
 class Entity a where
-  updatePosition :: a -> a
+  updatePosition :: a -> GameState-> a
   getHitbox :: a -> HitBox

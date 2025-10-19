@@ -4,14 +4,15 @@ import Model
 import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Game
 import Bullet 
+import GHC.Float (int2Float)
 
 --Go through the list of pressed keys and update the gamestate accordingly
 updatePlayer :: GameState -> GameState
 updatePlayer gstate =  turn (keys gstate) (moveForward (keys gstate) gstate)
 
 moveForward :: S.Set Key -> GameState -> GameState
-moveForward s gstate | S.member (Char 'w') s = gstate{player = updatePlayerPosition (playerAccelerate (player gstate))}
-                     | otherwise           = gstate{player = updatePlayerPosition (playerSlowDown (player gstate))}
+moveForward s gstate | S.member (Char 'w') s = gstate{player = updatePlayerPosition (playerAccelerate (player gstate)) gstate}
+                     | otherwise           = gstate{player = updatePlayerPosition (playerSlowDown (player gstate)) gstate}
 
 turn :: S.Set Key -> GameState -> GameState
 turn s gstate = foldr turnHelper gstate s
@@ -48,13 +49,21 @@ instance Entity Player where
   updatePosition = updatePlayerPosition
   getHitbox p    = HitBox (playerSize p) (playerPosition p)
 --Set the new player position
-updatePlayerPosition :: Player -> Player
-updatePlayerPosition p@(Player {playerDirection = Angle a, playerSpeed = v, playerPosition = Point x y}) = p{playerPosition = newPosition} 
+updatePlayerPosition :: Player -> GameState -> Player
+updatePlayerPosition p@(Player {playerDirection = Angle a, playerSpeed = v, playerPosition = Point x y}) gstate = p{playerPosition =  Point (boundsPositionX newPosition) (boundsPositionY newPosition)} 
   where 
     xComponent  = cos (convert a)
     yComponent  = sin (convert a)
     convert a   = a * pi / 180 --convert from degrees to radials
     newPosition = Point (xComponent * v + x) (yComponent * v + y)
+    boundsPositionX newPosition@(Point x y) | x > maxX = -x
+                                            | x < -maxX = -x
+                                            | otherwise = x
+    boundsPositionY newPosition@(Point x y) | y > maxY = -y
+                                            | y < -maxY = -y
+                                            | otherwise = y
+    maxX = int2Float ( fst (screenSize gstate)) /2
+    maxY = int2Float (snd (screenSize gstate)) /2
 
 --Increase and decrease player angle, bounds at 0 and 360
 steerLeft :: Player -> Angle
