@@ -6,14 +6,16 @@ import View
 
 import Graphics.Gloss.Interface.IO.Game
 import System.Random (getStdGen)
+import Graphics.Gloss.Interface.Environment (getScreenSize)
 
 main :: IO ()
 main = do
     gen <- getStdGen
-    playIO (InWindow "Asteroid" (400, 400) (0, 0)) -- Or FullScreen
+    screenSize <- getScreenSize
+    playIO FullScreen -- Or FullScreen
               black            -- Background color
               30               -- Frames per second
-              (initialState gen)     -- Initial state
+              (initialState gen screenSize)     -- Initial state
               view             -- View function
               input            -- Event function
               step             -- Step function

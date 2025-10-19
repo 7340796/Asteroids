@@ -4,18 +4,19 @@ module Controller where
 
 import Model
 import Graphics.Gloss
-import Graphics.Gloss.Interface.IO.Game 
+import Graphics.Gloss.Interface.IO.Game
 import System.Random
 import qualified Data.Set as S -- import datatype Set
 import Player
 import Asteroid
 import Bullet
 import BoundingBox (doesIntersect)
+import Graphics.Gloss.Interface.Environment (getScreenSize)
 
 -- | Handle one iteration of the game
 step :: Float -> GameState -> IO GameState
 step secs gstate
-  = do 
+  = do
      return $ checkForCollisions (updateBullets (updateAsteroids (updatePlayer gstate))){elapsedTime = (elapsedTime gstate) + secs}
 
 -- | Handle user input
@@ -29,36 +30,35 @@ handleInput (EventKey k Up _ _) gstate   = gstate {keys = S.delete k (keys gstat
 handleInput _ gstate                     = gstate
 
 checkForCollisions :: GameState -> GameState
-checkForCollisions gstate = gstate{asteroids = newAsteroidList'}--, enemies = newEnemyList} --lives = newLives}
+checkForCollisions gstate = gstate{asteroids = newAsteroidList, bullets = newBulletList, score = newScore, lives = newLives}--, enemies = newEnemyList} --}
   where
-    newAsteroidList | null $ bullets gstate = asteroids gstate
-                    | otherwise = [x | x <- asteroids gstate, y <- bullets gstate, not $ bulletHitsAsteroid y x]
-    newEnemyList    | null $ bullets gstate = enemies gstate
-                    | otherwise =  [x | x <- enemies gstate  , y <- bullets gstate, not $ bulletHitsEnemy y x]
-    --newLives        | or $ [bulletHitsPlayer x (player gstate) | x <- bullets gstate] = lives gstate - 1
-    --                | otherwise = lives gstate
-    newAsteroidList' = [x | x <- asteroids gstate, not $ playerHitsAsteroid (player gstate) x]
+    newAsteroidList = filter (\x -> not $ any (\y -> bulletHitsAsteroid y x ) (bullets gstate)) (asteroids gstate)
+    newBulletList   = filter (\x -> not $ any (\y -> bulletHitsAsteroid x y ) (asteroids gstate)) (bullets gstate)
+    newScore        | length newAsteroidList < length (asteroids gstate) = (score gstate) + 20
+                    | otherwise                                          = score gstate
+    newLives        | any (\x -> bulletHitsPlayer x (player gstate)) (bullets gstate) || any (playerHitsAsteroid (player gstate)) (asteroids gstate) = lives gstate - 1
+    -- newEnemyList    | null $ bullets gstate = enemies gstate
+    --                 | otherwise =  [x | x <- enemies gstate  , y <- bullets gstate, not $ bulletHitsEnemy y x]
 
 bulletHitsAsteroid :: Bullet -> Asteroid -> Bool
 bulletHitsAsteroid bul ast = doesIntersect bulHitbox astHitbox
-  where 
-    bulHitbox = getHitbox bul
-    astHitbox = getHitbox ast 
-
-bulletHitsEnemy :: Bullet -> Enemy -> Bool
-bulletHitsEnemy bul e = doesIntersect bulHitbox eHitbox
   where
     bulHitbox = getHitbox bul
-    eHitbox   = undefined
-
+    astHitbox = getHitbox ast
 bulletHitsPlayer :: Bullet -> Player -> Bool
 bulletHitsPlayer bul p = doesIntersect bulHitbox pHitbox
   where
     bulHitbox = getHitbox bul
     pHitbox   = getHitbox p
+-- bulletHitsEnemy :: Bullet -> Enemy -> Bool
+-- bulletHitsEnemy bul e = doesIntersect bulHitbox eHitbox
+--   where
+--     bulHitbox = getHitbox bul
+--     eHitbox   = undefined
+
 
 playerHitsAsteroid :: Player -> Asteroid -> Bool
 playerHitsAsteroid p ast = doesIntersect pHitbox astHitbox
-  where 
+  where
     pHitbox   = getHitbox p
     astHitbox = getHitbox ast
