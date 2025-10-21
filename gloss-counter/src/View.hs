@@ -10,7 +10,7 @@ view :: GameState -> IO Picture
 view = return . viewPure
 
 viewPure :: GameState -> Picture
-viewPure gstate = pictures (displayScore gstate : displayLives gstate : playerCircle gstate : (asteroidCircles gstate) ++ (bulletCircles gstate))
+viewPure gstate = pictures (displayScore gstate : displayLives gstate : playerCircle gstate : (asteroidCircles gstate) ++ (bulletCircles gstate) ++ (enemyCircles gstate))
 
 playerCircle :: GameState -> Picture
 playerCircle gstate = translate (x point) (y point) picture
@@ -52,6 +52,16 @@ displayScore gstate = translate (- int2Float(fst (screenSize gstate))/2 + 80) (-
    where
     picture = color red( text (show (score gstate)))
 
+enemyCircles :: GameState -> [Picture]
+enemyCircles gstate = map enemyCircle (enemies gstate)
+
+enemyCircle :: Enemy -> Picture
+enemyCircle en = translate (x point) (y point) picture
+  where
+      picture = color red (circle (enemySize en))
+      point = enemyPosition en
+      x (Point a _) = a
+      y (Point _ b) = b
 -- color red (circle (playerSize (player gstate)))
 -- color red (text (show (playerDirection (player gstate))))
 

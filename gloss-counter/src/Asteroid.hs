@@ -6,7 +6,7 @@ import GHC.Float (int2Float)
 
 updateAsteroids :: GameState -> GameState
 updateAsteroids gstate@(GameState{asteroids = asteroids }) | null asteroids = moveForward gstate{asteroids = generateRandomAsteroidList (rg gstate) 10}
-                                                           | otherwise = moveForward gstate
+                                                           | otherwise      = moveForward gstate
 
 moveForward :: GameState -> GameState
 moveForward gstate = gstate {asteroids = map (\x -> updateAsteroidPosition x gstate) (asteroids gstate)}

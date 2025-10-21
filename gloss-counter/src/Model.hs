@@ -17,6 +17,7 @@ data Enemy = Enemy {
                 enemyPosition  :: Point
               , enemyDirection :: Angle
               , enemySpeed     :: Float
+              , enemySize      :: Float
              }
 data Bullet = Bullet {
                 bulletPosition  :: Point
@@ -62,6 +63,7 @@ initialState :: StdGen -> (Int, Int) -> GameState
 initialState gen screenSize = GameState { elapsedTime = 0, state = Start, lives = 3, score = 0, player = (Player (Point 0 0) (Angle 90) 0 1 50), asteroids = asteroidlist, enemies = [], bullets = [], keys = S.empty, rg = gen, screenSize = screenSize }
   where 
     asteroidlist = []
+    enemyList = []
 
 
 class Entity a where

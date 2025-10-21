@@ -39,6 +39,7 @@ playerAccelerate p@(Player {playerSpeed = v}) = p{playerSpeed = newSpeed}
     newSpeed       | v < maxSpeed = v + acceleration p
                    | otherwise = v
     maxSpeed       = 10
+    
 instance Entity Player where
   updatePosition = updatePlayerPosition
   getHitbox p    = HitBox (playerSize p) (playerPosition p)

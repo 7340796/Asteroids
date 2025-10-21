@@ -10,6 +10,7 @@ import qualified Data.Set as S -- import datatype Set
 import Player
 import Asteroid
 import Bullet
+import Enemy
 import BoundingBox (doesIntersect)
 import Graphics.Gloss.Interface.Environment (getScreenSize)
 import Data.List
@@ -18,7 +19,7 @@ import Data.List
 step :: Float -> GameState -> IO GameState
 step secs gstate
   = do
-     return $ checkForCollisions (updateBullets (updateAsteroids (updatePlayer gstate))){elapsedTime = (elapsedTime gstate) + secs}
+     return $ checkForCollisions (updateEnemies(updateBullets (updateAsteroids (updatePlayer gstate)))){elapsedTime = (elapsedTime gstate) + secs}
 
 -- | Handle user input
 input :: Event -> GameState -> IO GameState
