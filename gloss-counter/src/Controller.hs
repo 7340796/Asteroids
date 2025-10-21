@@ -19,6 +19,9 @@ import Data.List
 step :: Float -> GameState -> IO GameState
 step secs gstate
   = do
+     let m (x:xs) = x 
+         m[] = (Enemy (Point 0 0) (Angle 5) 1 1 ) in
+      putStrLn (show (enemyDirection (m (enemies gstate))))    
      return $ checkForCollisions (updateEnemies(updateBullets (updateAsteroids (updatePlayer gstate)))){elapsedTime = (elapsedTime gstate) + secs}
 
 -- | Handle user input

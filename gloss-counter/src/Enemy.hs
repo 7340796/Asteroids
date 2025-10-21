@@ -1,7 +1,7 @@
 module Enemy where
 
 import Model
-import GHC.Float (int2Float)
+import GHC.Float (int2Float, acos)
 
 instance Entity Enemy where
   updatePosition = updateEnemyPosition
@@ -11,28 +11,36 @@ updateEnemies :: GameState -> GameState
 updateEnemies gstate | null (enemies gstate) = gstate{enemies = spawnEnemy gstate : updatedEnemies}
                      | otherwise             = gstate{enemies = updatedEnemies}
   where 
-    updatedEnemies = map (\x -> updateEnemyPosition x gstate) (enemies gstate)
+    updatedEnemies = map (\x -> updateEnemyPosition (updateEnemyDirection x gstate) gstate) (enemies gstate)
 
 updateEnemyPosition :: Enemy -> GameState -> Enemy
-updateEnemyPosition en@(Enemy {enemyPosition = enemyPosition, enemyDirection = Angle a, enemySpeed = v}) gstate = en{enemyPosition = newPosition, enemyDirection = Angle newDirection}
+updateEnemyPosition en@(Enemy {enemyPosition = (Point x y), enemyDirection = Angle a, enemySpeed = v}) gstate = en{enemyPosition = newPosition}
     where 
-      playerPos = playerPosition (player gstate)
-      deltaX = abs (x playerPos - x enemyPosition)
-      deltaY = abs (y playerPos - y enemyPosition)
-      lengthC = sqrt(deltaX * deltaX + deltaY * deltaY)
-      newDirection = acos(deltaY * deltaY + lengthC * lengthC - (deltaX * deltaX)) / (2 * deltaY * lengthC) --cosine rule
-      x (Point x y)     = x
-      y (Point x y)     = y
+      --playerPos = playerPosition (player gstate)
+      --deltaX        = abs (x playerPos - x enemyPosition)
+      --deltaY        = abs (y playerPos - y enemyPosition)
+      --lengthC       = sqrt(deltaX * deltaX + deltaY * deltaY)
+      --newDirection  = atan(deltaY / deltaX) --acos(deltaY * deltaY + lengthC * lengthC - (deltaX * deltaX)) / (2 * deltaY * lengthC) --cosine rule
       xComponent  = cos (convert a)
       yComponent  = sin (convert a)
       convert a   = a * pi / 180 --convert from degrees to radials
-      newPosition = Point (xComponent * v + x enemyPosition) (yComponent * v + y enemyPosition)
+      newPosition = Point (xComponent * v + x) (yComponent * v + y)
 
+updateEnemyDirection :: Enemy -> GameState -> Enemy
+updateEnemyDirection en@(Enemy {enemyDirection = Angle a, enemyPosition = enemyPos}) gstate = en{enemyDirection = Angle newDirection}
+  where
+    newDirection  = atan2 deltaY deltaX * (180 / pi)
+    playerPos     = playerPosition (player gstate)
+    x (Point a _) = a
+    y (Point _ b) = b
+    deltaX        = x playerPos - x enemyPos
+    deltaY        = y playerPos - y enemyPos
+    lengthC       = sqrt(deltaX * deltaX + deltaY * deltaY)  
 
 
 spawnEnemy :: GameState -> Enemy
-spawnEnemy gstate = Enemy {enemyPosition = spawnPosition, enemyDirection = Angle 90, enemySpeed = 8, enemySize = 20}
+spawnEnemy gstate = Enemy {enemyPosition = spawnPosition, enemyDirection = Angle 90, enemySpeed = 2, enemySize = 20}
    where
-    xSpawn = 40 --(int2Float(fst (screenSize gstate)) / 2)
-    ySpawn = 40 -- (int2Float(snd (screenSize gstate)) / 2)
+    xSpawn = -40 --(int2Float(fst (screenSize gstate)) / 2)
+    ySpawn = -40 -- (int2Float(snd (screenSize gstate)) / 2)
     spawnPosition = Point xSpawn ySpawn

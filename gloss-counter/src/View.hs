@@ -10,7 +10,7 @@ view :: GameState -> IO Picture
 view = return . viewPure
 
 viewPure :: GameState -> Picture
-viewPure gstate = pictures (displayScore gstate : displayLives gstate : playerCircle gstate : (asteroidCircles gstate) ++ (bulletCircles gstate) ++ (enemyCircles gstate))
+viewPure gstate = pictures (displayScore gstate :displayLives gstate : playerCircle gstate : asteroidCircles gstate ++ bulletCircles gstate ++ enemyCircles gstate ++ debugLines gstate)
 
 playerCircle :: GameState -> Picture
 playerCircle gstate = translate (x point) (y point) picture
@@ -62,6 +62,18 @@ enemyCircle en = translate (x point) (y point) picture
       point = enemyPosition en
       x (Point a _) = a
       y (Point _ b) = b
+
+debugLines :: GameState -> [Picture]
+debugLines gstate = [lineX, lineY, lineXY]
+  where
+    enemy | null (enemies gstate) = Enemy (Point 0 0) (Angle 0) 0 0
+          | otherwise = head (enemies gstate)
+    lineX = color red $ Line [(x $ enemyPosition enemy, y $ enemyPosition enemy), (x $ playerPosition (player gstate), y $ enemyPosition enemy)]
+    lineY = color blue $ Line [(x $ enemyPosition enemy, y $ enemyPosition enemy), (x $ enemyPosition enemy, y $ playerPosition (player gstate))]
+    lineXY = color green $ Line [(x $ enemyPosition enemy, y $ enemyPosition enemy), (x $ playerPosition (player gstate), y $ playerPosition (player gstate))]
+    x (Point a _) = a
+    y (Point _ b) = b 
+
 -- color red (circle (playerSize (player gstate)))
 -- color red (text (show (playerDirection (player gstate))))
 
