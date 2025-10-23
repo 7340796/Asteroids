@@ -22,7 +22,7 @@ turnHelper k gstate =
   case k of
     (Char 'a')            -> gstate {player  = (player gstate){playerDirection = steerLeft (player gstate)}}
     (Char 'd')            -> gstate {player  = (player gstate){playerDirection = steerRight (player gstate)}}
-    (SpecialKey KeySpace) -> gstate {bullets = spawnBullet gstate : bullets gstate, keys = S.delete (SpecialKey KeySpace) (keys gstate) }
+    (SpecialKey KeySpace) -> gstate {bullets = spawnPlayerBullet gstate : bullets gstate, keys = S.delete (SpecialKey KeySpace) (keys gstate) }
     _                     -> gstate
 
 --Set the player speed when slowing down

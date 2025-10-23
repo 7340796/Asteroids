@@ -17,7 +17,7 @@ executable gloss-counter
   other-modules:       Controller
                      , Model
                      , View
-		                 , Player
+                     , Player
                      , Asteroid
                      , Bullet
                      , BoundingBox

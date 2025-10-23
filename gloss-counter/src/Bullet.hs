@@ -27,13 +27,24 @@ updateBulletPosition bul@(Bullet {bulletSpeed = v, bulletDirection = Angle a, bu
     maxX        = int2Float ( fst (screenSize gstate)) /2
     maxY        = int2Float (snd (screenSize gstate)) /2
 
-spawnBullet :: GameState -> Bullet
-spawnBullet gstate = Bullet {bulletPosition = spawnPosition, bulletDirection = playerDirection player', bulletSpeed = 18, bulletSize = 5, lifeTime = 30}
+spawnPlayerBullet :: GameState -> Bullet
+spawnPlayerBullet gstate = Bullet {bulletPosition = spawnPosition, bulletDirection = playerDirection player', bulletSpeed = 18, bulletSize = 5, lifeTime = 30}
     where 
         player'           = player gstate 
         spawnDirection    = playerDirection (player gstate)
         convert (Angle a) = a * pi / 180
         spawnPosition     = Point (xComponent * playerSize (player gstate) + x (playerPosition (player gstate))) (yComponent * playerSize (player gstate) + y (playerPosition (player gstate)))
+        xComponent        = cos (convert spawnDirection)
+        yComponent        = sin(convert spawnDirection)
+        x (Point x y)     = x
+        y (Point x y)     = y
+
+spawnEnemyBullet :: GameState -> Enemy -> Bullet
+spawnEnemyBullet gstate enemy = Bullet {bulletPosition = spawnPosition, bulletDirection = enemyDirection enemy, bulletSpeed = 18, bulletSize = 5, lifeTime = 30}
+    where 
+        spawnDirection    = enemyDirection enemy
+        convert (Angle a) = a * pi / 180
+        spawnPosition     = Point (xComponent * enemySize enemy + x (enemyPosition enemy)) (yComponent * enemySize enemy + y (enemyPosition enemy))
         xComponent        = cos (convert spawnDirection)
         yComponent        = sin(convert spawnDirection)
         x (Point x y)     = x

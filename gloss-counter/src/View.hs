@@ -10,7 +10,7 @@ view :: GameState -> IO Picture
 view = return . viewPure
 
 viewPure :: GameState -> Picture
-viewPure gstate = pictures (displayScore gstate :displayLives gstate : playerCircle gstate : asteroidCircles gstate ++ bulletCircles gstate ++ enemyCircles gstate ++ debugLines gstate)
+viewPure gstate = pictures (displayScore gstate :displayLives gstate : playerCircle gstate : asteroidCircles gstate ++ bulletCircles gstate ++ enemyCircles gstate)
 
 playerCircle :: GameState -> Picture
 playerCircle gstate = translate (x point) (y point) picture
