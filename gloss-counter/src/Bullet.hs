@@ -39,13 +39,13 @@ spawnPlayerBullet gstate = Bullet {bulletPosition = spawnPosition, bulletDirecti
         x (Point x y)     = x
         y (Point x y)     = y
 
-spawnEnemyBullet :: GameState -> Enemy -> Bullet
-spawnEnemyBullet gstate enemy = Bullet {bulletPosition = spawnPosition, bulletDirection = enemyDirection enemy, bulletSpeed = 18, bulletSize = 5, lifeTime = 30}
+spawnEnemyBullet :: Enemy -> Bullet
+spawnEnemyBullet enemy = Bullet {bulletPosition = spawnPosition, bulletDirection = spawnDirection, bulletSpeed = 18, bulletSize = 5, lifeTime = 30}
     where 
         spawnDirection    = enemyDirection enemy
         convert (Angle a) = a * pi / 180
         spawnPosition     = Point (xComponent * enemySize enemy + x (enemyPosition enemy)) (yComponent * enemySize enemy + y (enemyPosition enemy))
-        xComponent        = cos (convert spawnDirection)
+        xComponent        = cos(convert spawnDirection)
         yComponent        = sin(convert spawnDirection)
         x (Point x y)     = x
         y (Point x y)     = y

@@ -18,7 +18,9 @@ data Enemy = Enemy {
               , enemyDirection :: Angle
               , enemySpeed     :: Float
               , enemySize      :: Float
+              , shootTimer     :: Int
              }
+  deriving(Show, Eq) 
 data Bullet = Bullet {
                 bulletPosition  :: Point
               , bulletDirection :: Angle
@@ -26,6 +28,7 @@ data Bullet = Bullet {
               , bulletSize      :: Float
               , lifeTime        :: Int
              }
+  deriving(Show, Eq)
 data Asteroid = Asteroid {
                 asteroidPosition  :: Point
               , asteroidDirection :: Angle

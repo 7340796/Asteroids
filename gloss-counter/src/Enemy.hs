@@ -2,17 +2,31 @@ module Enemy where
 
 import Model
 import GHC.Float (int2Float, acos, float2Int)
+import Bullet
+import Data.Maybe (mapMaybe)
 
 instance Entity Enemy where
   updatePosition = updateEnemyPosition
   getHitbox e    = HitBox (enemySize e) (enemyPosition e)
 
+shootForAll :: GameState -> GameState
+shootForAll gstate@GameState{bullets = bullets} = gstate{bullets = bullets ++ enemyBullets}
+  where
+    enemyBullets = mapMaybe (shootWhenTimer) (enemies gstate)
+
+shootWhenTimer :: Enemy -> Maybe Bullet
+shootWhenTimer e@Enemy{shootTimer = shootTimer} | shootTimer `mod` 60 == 0 = Just (spawnEnemyBullet e)
+                                       | otherwise                = Nothing
+
+updateTimer :: Enemy -> Enemy
+updateTimer e@Enemy{shootTimer = shootTimer} = e{shootTimer = shootTimer + 1}
+
 updateEnemies :: GameState -> GameState
 updateEnemies gstate | null(asteroids gstate) && elapsedTime gstate > 0 = gstate{enemies = spawnEnemy gstate : updatedEnemies}
-                     | otherwise                     = gstate{enemies = updatedEnemies}
+                     | otherwise                     = shootForAll gstate{enemies = updatedEnemies}
   where 
-    updatedEnemies = map (\x -> updateEnemyPosition (updateEnemyDirection x gstate) gstate) (enemies gstate)
-
+    updatedEnemies = map (\x ->  updateTimer (updateEnemyPosition (updateEnemyDirection x gstate) gstate)) (enemies gstate)
+    
 updateEnemyPosition :: Enemy -> GameState -> Enemy
 updateEnemyPosition en@(Enemy {enemyPosition = (Point x y), enemyDirection = Angle a, enemySpeed = v}) gstate = en{enemyPosition = newPosition}
     where 
@@ -39,7 +53,7 @@ updateEnemyDirection en@(Enemy {enemyDirection = Angle a, enemyPosition = enemyP
 
 
 spawnEnemy :: GameState -> Enemy
-spawnEnemy gstate = Enemy {enemyPosition = spawnPosition, enemyDirection = Angle 90, enemySpeed = 2, enemySize = 20}
+spawnEnemy gstate = Enemy {enemyPosition = spawnPosition, enemyDirection = Angle 90, enemySpeed = 2, enemySize = 20, shootTimer = 0}
    where
     xSpawn =  (int2Float(fst (screenSize gstate)) / 2)
     ySpawn =  (int2Float(snd (screenSize gstate)) / 2)

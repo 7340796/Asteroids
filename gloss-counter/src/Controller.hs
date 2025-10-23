@@ -18,8 +18,12 @@ import Data.List
 -- | Handle one iteration of the game
 step :: Float -> GameState -> IO GameState
 step secs gstate
-  = do   
-     return $ checkForCollisions (updateBullets (updateAsteroids(updateEnemies (updatePlayer gstate)))){elapsedTime = (elapsedTime gstate) + secs}
+  = do
+    if enemies gstate /= [] then 
+     let e = head (enemies gstate) in   
+     putStrLn(show e)
+     else putStrLn(" ")
+    return $ checkForCollisions (updateBullets (updateAsteroids(updateEnemies (updatePlayer gstate)))){elapsedTime = (elapsedTime gstate) + secs}
 
 -- | Handle user input
 input :: Event -> GameState -> IO GameState

@@ -63,16 +63,6 @@ enemyCircle en = translate (x point) (y point) picture
       x (Point a _) = a
       y (Point _ b) = b
 
-debugLines :: GameState -> [Picture]
-debugLines gstate = [lineX, lineY, lineXY]
-  where
-    enemy | null (enemies gstate) = Enemy (Point 0 0) (Angle 0) 0 0
-          | otherwise = head (enemies gstate)
-    lineX = color red $ Line [(x $ enemyPosition enemy, y $ enemyPosition enemy), (x $ playerPosition (player gstate), y $ enemyPosition enemy)]
-    lineY = color blue $ Line [(x $ enemyPosition enemy, y $ enemyPosition enemy), (x $ enemyPosition enemy, y $ playerPosition (player gstate))]
-    lineXY = color green $ Line [(x $ enemyPosition enemy, y $ enemyPosition enemy), (x $ playerPosition (player gstate), y $ playerPosition (player gstate))]
-    x (Point a _) = a
-    y (Point _ b) = b 
 
 -- color red (circle (playerSize (player gstate)))
 -- color red (text (show (playerDirection (player gstate))))
