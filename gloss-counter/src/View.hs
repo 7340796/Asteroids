@@ -10,12 +10,12 @@ view :: GameState -> IO Picture
 view = return . viewPure
 
 viewPure :: GameState -> Picture
-viewPure gstate = pictures (displayScore gstate :displayLives gstate : playerCircle gstate : asteroidCircles gstate ++ bulletCircles gstate ++ enemyCircles gstate)
+viewPure gstate = pictures ( playerDirectionIndicator (player gstate): displayScore gstate :displayLives gstate : playerCircle gstate : asteroidCircles gstate ++ bulletCircles gstate ++ enemyCircles gstate)
 
 playerCircle :: GameState -> Picture
 playerCircle gstate = translate (x point) (y point) picture
  where
-    picture = color red (circle (playerSize (player gstate)))
+    picture = color rose (circle (playerSize (player gstate)))
     point = playerPosition (player gstate)
     x (Point a _) = a
     y (Point _ b) = b 
@@ -26,7 +26,7 @@ asteroidCircles gstate = map asteroidCircle (asteroids gstate)
 asteroidCircle :: Asteroid -> Picture
 asteroidCircle ast = translate (x point) (y point) picture
   where
-    picture = color green (circle (asteroidSize ast))
+    picture = color white (circle (asteroidSize ast))
     point = asteroidPosition ast
     x (Point a _) = a
     y (Point _ b) = b
@@ -37,7 +37,7 @@ bulletCircles gstate = map bulletCircle (bullets gstate)
 bulletCircle :: Bullet -> Picture
 bulletCircle bul = translate (x point) (y point) picture
   where
-      picture = color green (circle (bulletSize bul))
+      picture = color yellow (circle (bulletSize bul))
       point = bulletPosition bul
       x (Point a _) = a
       y (Point _ b) = b
@@ -63,6 +63,18 @@ enemyCircle en = translate (x point) (y point) picture
       x (Point a _) = a
       y (Point _ b) = b
 
+playerDirectionIndicator :: Player -> Picture
+playerDirectionIndicator p = translate (x point) (y point) picture
+ where
+    picture = color yellow (circle 4)
+    point = spawnPosition
+    spawnDirection    = playerDirection p
+    convert (Angle a) = a * pi / 180
+    spawnPosition     = Point (xComponent * playerSize p + x (playerPosition p)) (yComponent * playerSize p + y (playerPosition p))
+    xComponent        = cos(convert spawnDirection)
+    yComponent        = sin(convert spawnDirection)
+    x (Point a _) = a
+    y (Point _ b) = b 
 
 -- color red (circle (playerSize (player gstate)))
 -- color red (text (show (playerDirection (player gstate))))
