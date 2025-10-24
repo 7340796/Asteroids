@@ -10,7 +10,16 @@ view :: GameState -> IO Picture
 view = return . viewPure
 
 viewPure :: GameState -> Picture
-viewPure gstate = pictures ( playerDirectionIndicator (player gstate): displayScore gstate :displayLives gstate : playerCircle gstate : asteroidCircles gstate ++ bulletCircles gstate ++ enemyCircles gstate)
+viewPure gstate = case state gstate of
+                    Playing  -> pictures gamePicture
+                    GameOver -> pictures (gameOver : gamePicture)
+                    Paused   -> pictures (paused : gamePicture)
+  where
+    gamePicture = playerDirectionIndicator (player gstate): displayScore gstate :displayLives gstate : playerCircle gstate : asteroidCircles gstate ++ bulletCircles gstate ++ enemyCircles gstate
+    gameOver    = translate translateX (translateY - 120) (color red (text "Game Over! :("))
+    paused      = translate translateX (translateY - 120) (color red (text "Paused..."))
+    translateX = -(int2Float (fst (screenSize gstate)) / 2)
+    translateY = int2Float (snd (screenSize gstate)) / 2
 
 playerCircle :: GameState -> Picture
 playerCircle gstate = translate (x point) (y point) picture
