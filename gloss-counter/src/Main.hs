@@ -12,7 +12,7 @@ main :: IO ()
 main = do
     gen <- getStdGen
     screenSize <- getScreenSize
-    playIO FullScreen -- Or FullScreen InWindow "asteroids" (400, 400) (0,0)
+    playIO FullScreen          -- Or InWindow "asteroids" (400, 400) (0,0)
               black            -- Background color
               30               -- Frames per second
               (initialState gen screenSize)     -- Initial state

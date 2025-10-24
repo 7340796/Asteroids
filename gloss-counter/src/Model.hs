@@ -10,9 +10,9 @@ data Player = Player {
               , playerDirection    :: Angle
               , playerSpeed        :: Float
               , acceleration       :: Float
-              , playerSize         :: Float -- grootte van de cirkel
+              , playerSize         :: Float
              }
-  deriving(Show)
+  deriving(Show, Eq)
 data Enemy = Enemy {
                 enemyPosition  :: Point
               , enemyDirection :: Angle
@@ -35,18 +35,17 @@ data Asteroid = Asteroid {
               , asteroidSpeed     :: Float
               , asteroidSize      :: Float 
              } 
-  deriving (Eq)
+  deriving (Show, Eq)
 data Point  = Point Float Float
   deriving (Show, Eq)
-data Vector = Vector Float Float 
+data Vector = Vector Float Float
+  deriving (Show, Eq) 
 newtype Angle  = Angle Float
   deriving (Show, Eq) 
 data State  = Start | Playing | Paused | GameOver
+  deriving (Show, Eq)
 data HitBox = HitBox Float Point
-
-
-nO_SECS_BETWEEN_CYCLES :: Float
-nO_SECS_BETWEEN_CYCLES = 5
+  deriving (Show, Eq)
 
 data GameState = GameState {
                    elapsedTime :: Float
@@ -63,10 +62,9 @@ data GameState = GameState {
                  }
 
 initialState :: StdGen -> (Int, Int) -> GameState
-initialState gen screenSize = GameState { elapsedTime = 0, state = Start, lives = 300, score = 0, player = (Player (Point 0 0) (Angle 90) 0 1 50), asteroids = asteroidlist, enemies = [], bullets = [], keys = S.empty, rg = gen, screenSize = screenSize }
+initialState gen screenSize = GameState { elapsedTime = 0, state = Start, lives = 300, score = 0, player = player, asteroids = [], enemies = [], bullets = [], keys = S.empty, rg = gen, screenSize = screenSize }
   where 
-    asteroidlist = []
-    enemyList = []
+    player = Player (Point 0 0) (Angle 90) 0 1 30
 
 
 class Entity a where

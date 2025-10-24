@@ -4,23 +4,24 @@ import Model
 import System.Random
 import GHC.Float (int2Float)
 
-updateAsteroids :: GameState -> GameState
-updateAsteroids gstate@(GameState{asteroids = asteroids }) | null asteroids = moveForward gstate{asteroids = generateRandomAsteroidList (rg gstate) 10}
-                                                           | otherwise      = moveForward gstate
-
-moveForward :: GameState -> GameState
-moveForward gstate = gstate {asteroids = map (\x -> updateAsteroidPosition x gstate) (asteroids gstate)}
-
 instance Entity Asteroid where
   updatePosition = updateAsteroidPosition
   getHitbox ast = HitBox (asteroidSize ast) (asteroidPosition ast)
+
+--Spawn asteroids when there are none in the playing field
+updateAsteroids :: GameState -> GameState
+updateAsteroids gstate@(GameState{asteroids = asteroids }) | null asteroids = moveForward gstate{asteroids = generateRandomAsteroidList (rg gstate) 7}
+                                                           | otherwise      = moveForward gstate
+
+moveForward :: GameState -> GameState
+moveForward gstate = gstate {asteroids = map (`updateAsteroidPosition` gstate) (asteroids gstate)}
 
 updateAsteroidPosition :: Asteroid -> GameState -> Asteroid
 updateAsteroidPosition ast@(Asteroid {asteroidSpeed = v, asteroidDirection = Angle a, asteroidPosition = Point x y}) gstate = ast{asteroidPosition =  Point (boundsPositionX newPosition) (boundsPositionY newPosition)}
     where
     xComponent  = cos (convert a)
     yComponent  = sin (convert a)
-    convert a   = a * pi / 180 --convert from degrees to radials
+    convert a   = a * pi / 180 --convert from degrees to radians
     newPosition = Point (xComponent * v + x) (yComponent * v + y)
     boundsPositionX newPosition@(Point x y) | x > maxX = -x
                                             | x < -maxX = -x
@@ -39,7 +40,7 @@ generateRandomAsteroid g =
     (a, gen2) = randomR (0, 10) gen1
     (x, gen3) = randomR (0, 10) gen2
     (y, gen4) = randomR (0, 10) gen3
-    (s, gen5) = randomR (10, 30) gen4
+    (s, gen5) = randomR (30, 60) gen4
   in
     ((Asteroid {asteroidSpeed = v, asteroidDirection = Angle (a * 36), asteroidPosition = Point (x*40) (y*40), asteroidSize = s}), gen5)
 

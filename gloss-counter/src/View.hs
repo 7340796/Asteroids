@@ -18,7 +18,7 @@ playerCircle gstate = translate (x point) (y point) picture
     picture = color rose (circle (playerSize (player gstate)))
     point = playerPosition (player gstate)
     x (Point a _) = a
-    y (Point _ b) = b 
+    y (Point _ b) = b
 
 asteroidCircles :: GameState -> [Picture]
 asteroidCircles gstate = map asteroidCircle (asteroids gstate)
@@ -43,14 +43,14 @@ bulletCircle bul = translate (x point) (y point) picture
       y (Point _ b) = b
 
 displayLives :: GameState -> Picture
-displayLives gstate = translate (- int2Float(fst (screenSize gstate))/2) (- int2Float(snd (screenSize gstate))/2) picture
+displayLives gstate = translate (- (int2Float (fst (screenSize gstate)) / 2)) (- (int2Float (snd (screenSize gstate)) / 2)) picture
    where
-    picture = color yellow( text (show (lives gstate)))
+    picture = color yellow ( text (show (lives gstate)))
 
 displayScore :: GameState -> Picture
-displayScore gstate = translate (- int2Float(fst (screenSize gstate))/2 + 80) (- int2Float(snd (screenSize gstate))/2) picture
+displayScore gstate = translate (- (int2Float (fst (screenSize gstate)) / 2) + 80) (- (int2Float (snd (screenSize gstate)) / 2)) picture
    where
-    picture = color red( text (show (score gstate)))
+    picture = color red ( text (show (score gstate)))
 
 enemyCircles :: GameState -> [Picture]
 enemyCircles gstate = map enemyCircle (enemies gstate)
@@ -71,16 +71,7 @@ playerDirectionIndicator p = translate (x point) (y point) picture
     spawnDirection    = playerDirection p
     convert (Angle a) = a * pi / 180
     spawnPosition     = Point (xComponent * playerSize p + x (playerPosition p)) (yComponent * playerSize p + y (playerPosition p))
-    xComponent        = cos(convert spawnDirection)
-    yComponent        = sin(convert spawnDirection)
+    xComponent        = cos (convert spawnDirection)
+    yComponent        = sin (convert spawnDirection)
     x (Point a _) = a
-    y (Point _ b) = b 
-
--- color red (circle (playerSize (player gstate)))
--- color red (text (show (playerDirection (player gstate))))
-
-{- viewPure :: GameState -> Picture
-viewPure gstate = case infoToShow gstate of
-  ShowNothing   -> blank
-  ShowANumber n -> color green (text (show n))
-  ShowAChar   c -> color green (text [c]) -}
+    y (Point _ b) = b

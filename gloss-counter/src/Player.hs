@@ -6,19 +6,23 @@ import Graphics.Gloss.Interface.IO.Game
 import Bullet
 import GHC.Float (int2Float)
 
+instance Entity Player where
+  updatePosition = updatePlayerPosition
+  getHitbox p    = HitBox (playerSize p) (playerPosition p)
+
 --Go through the list of pressed keys and update the gamestate accordingly
 updatePlayer :: GameState -> GameState
-updatePlayer gstate =  turn (keys gstate) (moveForward (keys gstate) gstate)
+updatePlayer gstate =  applyKeyAction (keys gstate) (moveForward (keys gstate) gstate)
 
 moveForward :: S.Set Key -> GameState -> GameState
 moveForward s gstate | S.member (Char 'w') s = gstate{player = updatePlayerPosition (playerAccelerate (player gstate)) gstate}
                      | otherwise             = gstate{player = updatePlayerPosition (playerSlowDown (player gstate)) gstate}
 
-turn :: S.Set Key -> GameState -> GameState
-turn s gstate = foldr turnHelper gstate s
+applyKeyAction :: S.Set Key -> GameState -> GameState
+applyKeyAction s gstate = foldr keyActions gstate s
 
-turnHelper :: Key -> GameState -> GameState
-turnHelper k gstate =
+keyActions :: Key -> GameState -> GameState
+keyActions k gstate =
   case k of
     (Char 'a')            -> gstate {player  = (player gstate){playerDirection = steerLeft (player gstate)}}
     (Char 'd')            -> gstate {player  = (player gstate){playerDirection = steerRight (player gstate)}}
@@ -40,16 +44,13 @@ playerAccelerate p@(Player {playerSpeed = v}) = p{playerSpeed = newSpeed}
                    | otherwise = v
     maxSpeed       = 10
     
-instance Entity Player where
-  updatePosition = updatePlayerPosition
-  getHitbox p    = HitBox (playerSize p) (playerPosition p)
 --Set the new player position
 updatePlayerPosition :: Player -> GameState -> Player
 updatePlayerPosition p@(Player {playerDirection = Angle a, playerSpeed = v, playerPosition = Point x y}) gstate = p{playerPosition =  Point (boundsPositionX newPosition) (boundsPositionY newPosition)}
   where
     xComponent  = cos (convert a)
     yComponent  = sin (convert a)
-    convert a   = a * pi / 180 --convert from degrees to radials
+    convert a   = a * pi / 180 --convert from degrees to radians
     newPosition = Point (xComponent * v + x) (yComponent * v + y)
     boundsPositionX newPosition@(Point x y) | x > maxX = -x
                                             | x < -maxX = -x
@@ -64,7 +65,6 @@ updatePlayerPosition p@(Player {playerDirection = Angle a, playerSpeed = v, play
 steerLeft :: Player -> Angle
 steerLeft p@(Player {playerDirection = Angle a}) | a + 5 > 360 = Angle (a + 5 - 360)
                                                  | otherwise    = Angle (a + 5)
-
 steerRight :: Player -> Angle
 steerRight p@(Player {playerDirection = Angle a}) | a - 5 < 0 = Angle (a - 5 + 360)
                                                   | otherwise  = Angle (a - 5)

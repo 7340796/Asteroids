@@ -22,4 +22,5 @@ executable gloss-counter
                      , Bullet
                      , BoundingBox
                      , Enemy
+                     , Collisions
   default-language:    Haskell2010
