@@ -11,14 +11,28 @@ import Asteroid
 import Bullet
 import Enemy
 import Collisions
+import Highscore
+import System.IO
+import Prelude
 
 -- | Handle one iteration of the game
 step :: Float -> GameState -> IO GameState
 step secs gstate
   = do
     let
-      newState = gstate{elapsedTime = elapsedTime gstate + secs}
-    return $ checkForCollisions ((updateBullets.updateAsteroids.updateEnemies.updatePlayer) newState)
+      newState = stateChange gstate{elapsedTime = elapsedTime gstate + secs}
+    case state newState of 
+      Playing  -> return $ checkForCollisions ((updateBullets.updateAsteroids.updateEnemies.updatePlayer) newState)
+      GameOver -> putHighScore newState
+
+putHighScore :: GameState -> IO GameState
+putHighScore gstate = do
+  writeHighscore (score gstate)
+  return gstate
+
+stateChange :: GameState -> GameState
+stateChange gstate | lives gstate <= 0 = gstate{state = GameOver}
+                   | otherwise = gstate
 
 --Handle user input
 input :: Event -> GameState -> IO GameState

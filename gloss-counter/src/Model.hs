@@ -42,7 +42,7 @@ data Vector = Vector Float Float
   deriving (Show, Eq) 
 newtype Angle  = Angle Float
   deriving (Show, Eq) 
-data State  = Start | Playing | Paused | GameOver
+data State  = Playing | Paused | GameOver
   deriving (Show, Eq)
 data HitBox = HitBox Float Point
   deriving (Show, Eq)
@@ -62,7 +62,7 @@ data GameState = GameState {
                  }
 
 initialState :: StdGen -> (Int, Int) -> GameState
-initialState gen screenSize = GameState { elapsedTime = 0, state = Start, lives = 300, score = 0, player = player, asteroids = [], enemies = [], bullets = [], keys = S.empty, rg = gen, screenSize = screenSize }
+initialState gen screenSize = GameState { elapsedTime = 0, state = Playing, lives = 3, score = 0, player = player, asteroids = [], enemies = [], bullets = [], keys = S.empty, rg = gen, screenSize = screenSize }
   where 
     player = Player (Point 0 0) (Angle 90) 0 1 30
 
