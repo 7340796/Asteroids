@@ -11,7 +11,7 @@ import Graphics.Gloss.Interface.Environment (getScreenSize)
 main :: IO ()
 main = do
     gen <- getStdGen
-    screenSize <- getScreenSize
+    screenSize <- getScreenSize 
     playIO FullScreen          -- Or InWindow "asteroids" (400, 400) (0,0)
               black            -- Background color
               30               -- Frames per second

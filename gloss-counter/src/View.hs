@@ -5,6 +5,7 @@ module View where
 import Graphics.Gloss
 import Model
 import GHC.Float (int2Float)
+import Animations
 
 view :: GameState -> IO Picture
 view = return . viewPure
@@ -12,10 +13,11 @@ view = return . viewPure
 viewPure :: GameState -> Picture
 viewPure gstate = case state gstate of
                     Playing  -> pictures gamePicture
-                    GameOver -> pictures (gameOver : gamePicture)
+                    GameOver -> pictures (gameOver : gamePictureWOPlayer)
                     Paused   -> pictures (paused : gamePicture)
   where
     gamePicture = playerDirectionIndicator (player gstate): displayScore gstate :displayLives gstate : playerCircle gstate : asteroidCircles gstate ++ bulletCircles gstate ++ enemyCircles gstate
+    gamePictureWOPlayer = displayScore gstate :displayLives gstate : asteroidCircles gstate ++ bulletCircles gstate ++ enemyCircles gstate
     gameOver    = translate translateX (translateY - 120) (color red (text "Game Over! :("))
     paused      = translate translateX (translateY - 120) (color red (text "Paused..."))
     translateX = -(int2Float (fst (screenSize gstate)) / 2)
