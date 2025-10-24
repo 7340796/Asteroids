@@ -57,12 +57,13 @@ data GameState = GameState {
                  , enemies     :: [Enemy]
                  , bullets     :: [Bullet]
                  , keys        :: S.Set Key
+                 , toggleKeys  :: S.Set Key
                  , rg          :: StdGen
                  , screenSize  :: (Int, Int)
                  }
 
 initialState :: StdGen -> (Int, Int) -> GameState
-initialState gen screenSize = GameState { elapsedTime = 0, state = Playing, lives = 3, score = 0, player = player, asteroids = [], enemies = [], bullets = [], keys = S.empty, rg = gen, screenSize = screenSize }
+initialState gen screenSize = GameState { elapsedTime = 0, state = Playing, lives = 3, score = 0, player = player, asteroids = [], enemies = [], bullets = [], keys = S.empty, toggleKeys = S.empty, rg = gen, screenSize = screenSize }
   where 
     player = Player (Point 0 0) (Angle 90) 0 1 30
 
