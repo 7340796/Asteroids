@@ -11,6 +11,7 @@ data Player = Player {
               , playerSpeed        :: Float
               , acceleration       :: Float
               , playerSize         :: Float
+              , animationTimer     :: Float 
              }
   deriving(Show, Eq)
 data Enemy = Enemy {
@@ -65,7 +66,7 @@ data GameState = GameState {
 initialState :: StdGen -> (Int, Int) -> GameState
 initialState gen screenSize = GameState { elapsedTime = 0, state = Playing, lives = 3, score = 0, player = player, asteroids = [], enemies = [], bullets = [], keys = S.empty, toggleKeys = S.empty, rg = gen, screenSize = screenSize }
   where 
-    player = Player (Point 0 0) (Angle 90) 0 1 30
+    player = Player (Point 0 0) (Angle 90) 0 1 30 0
 
 
 class Entity a where

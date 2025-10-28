@@ -14,17 +14,16 @@ import Collisions
 import Highscore
 import System.IO
 import Prelude
-import Model (GameState(toggleKeys), State (Paused))
-
+import Animations
 -- | Handle one iteration of the game
 step :: Float -> GameState -> IO GameState
 step secs gstate
   = do
     let
       newState = (pause) gstate{elapsedTime = elapsedTime gstate + secs}
-    case state newState of 
+    case state newState of
       Playing  -> return $ checkForCollisions ((updateBullets.updateAsteroids.updateEnemies.updatePlayer) newState)
-      GameOver -> putHighScore newState
+      GameOver -> putHighScore (shrinkPlayer (elapsedTime newState) newState)
       Paused   -> return newState
 
 putHighScore :: GameState -> IO GameState
@@ -38,7 +37,7 @@ stateChange gstate | lives gstate <= 0 = gstate{state = GameOver}
 
 pause :: GameState -> GameState
 pause gstate | S.member (SpecialKey KeyEsc) (toggleKeys gstate) = gstate{state = Paused}
-             | otherwise                                        = stateChange gstate  
+             | otherwise                                        = stateChange gstate
 --Handle user input
 input :: Event -> GameState -> IO GameState
 input e gstate = return (handleInput e gstate)

@@ -19,7 +19,7 @@ checkForCollisions gstate | lives gstate > 0 = gstate{asteroids = newAsteroidLis
                     | otherwise                                          = score gstate
     newLives        | any (\x -> bulletHitsPlayer x (player gstate)) (bullets gstate) || any (playerHitsAsteroid (player gstate)) (asteroids gstate) || any (playerHitsEnemy (player gstate)) (enemies gstate) = lives gstate - 1
                     | otherwise = lives gstate
-    newPlayer       | newLives < lives gstate = (player gstate){playerPosition = Point 0 0, playerDirection = Angle 90, playerSpeed = 0}
+    newPlayer       | newLives < lives gstate = (player gstate){playerPosition = Point 0 0, playerDirection = Angle 90, playerSpeed = 0, animationTimer = 0}
                     | otherwise               = player gstate  
     newEnemyList    = filter (\x -> not $ any (\y -> bulletHitsEnemy y x) (bullets gstate)) (enemies gstate)
 

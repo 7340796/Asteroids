@@ -17,7 +17,7 @@ viewPure gstate = case state gstate of
                     Paused   -> pictures (paused : gamePicture)
   where
     gamePicture = playerDirectionIndicator (player gstate): displayScore gstate :displayLives gstate : playerCircle gstate : asteroidCircles gstate ++ bulletCircles gstate ++ enemyCircles gstate
-    gamePictureWOPlayer = displayScore gstate :displayLives gstate : asteroidCircles gstate ++ bulletCircles gstate ++ enemyCircles gstate
+    gamePictureWOPlayer = playerCircle gstate : displayScore gstate :displayLives gstate : asteroidCircles gstate ++ bulletCircles gstate ++ enemyCircles gstate
     gameOver    = translate translateX (translateY - 120) (color red (text "Game Over! :("))
     paused      = translate translateX (translateY - 120) (color red (text "Paused..."))
     translateX = -(int2Float (fst (screenSize gstate)) / 2)
