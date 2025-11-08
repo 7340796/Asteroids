@@ -3,10 +3,14 @@ module Asteroid where
 import Model
 import System.Random
 import GHC.Float (int2Float)
+import Entity
 
 instance Entity Asteroid where
-  updatePosition = updateAsteroidPosition
   getHitbox ast = HitBox (asteroidSize ast) (asteroidPosition ast)
+  position      = asteroidPosition
+  speed         = asteroidSpeed
+  direction     = asteroidDirection
+  size          = asteroidSize
 
 --Spawn asteroids when there are none in the playing field
 updateAsteroids :: GameState -> GameState
@@ -17,21 +21,10 @@ moveForward :: GameState -> GameState
 moveForward gstate = gstate {asteroids = map (`updateAsteroidPosition` gstate) (asteroids gstate)}
 
 updateAsteroidPosition :: Asteroid -> GameState -> Asteroid
-updateAsteroidPosition ast@(Asteroid {asteroidSpeed = v, asteroidDirection = Angle a, asteroidPosition = Point x y}) gstate = ast{asteroidPosition =  Point (boundsPositionX newPosition) (boundsPositionY newPosition)}
+updateAsteroidPosition ast gstate = ast{asteroidPosition =  boundsPosition' newAst gstate}
     where
-    xComponent  = cos (convert a)
-    yComponent  = sin (convert a)
-    convert a   = a * pi / 180 --convert from degrees to radians
-    newPosition = Point (xComponent * v + x) (yComponent * v + y)
-    boundsPositionX newPosition@(Point x y) | x > maxX = -x
-                                            | x < -maxX = -x
-                                            | otherwise = x
-    boundsPositionY newPosition@(Point x y) | y > maxY = -y
-                                            | y < -maxY = -y
-                                            | otherwise = y
-    maxX = int2Float ( fst (screenSize gstate)) /2
-    maxY = int2Float (snd (screenSize gstate)) /2
-
+    newAst = ast{asteroidPosition = newPosition}
+    newPosition = updatePosition' ast gstate
 
 generateRandomAsteroid :: StdGen -> (Asteroid, StdGen)
 generateRandomAsteroid g =

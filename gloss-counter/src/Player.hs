@@ -5,10 +5,14 @@ import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Game
 import Bullet
 import GHC.Float (int2Float)
+import Entity
 
 instance Entity Player where
-  updatePosition = updatePlayerPosition
   getHitbox p    = HitBox (playerSize p) (playerPosition p)
+  position       = playerPosition
+  direction      = playerDirection
+  speed          = playerSpeed
+  size           = playerSize
 
 --Go through the list of pressed keys and update the gamestate accordingly
 updatePlayer :: GameState -> GameState
@@ -46,20 +50,10 @@ playerAccelerate p@(Player {playerSpeed = v}) = p{playerSpeed = newSpeed}
     
 --Set the new player position
 updatePlayerPosition :: Player -> GameState -> Player
-updatePlayerPosition p@(Player {playerDirection = Angle a, playerSpeed = v, playerPosition = Point x y}) gstate = p{playerPosition =  Point (boundsPositionX newPosition) (boundsPositionY newPosition)}
+updatePlayerPosition p gstate = p{playerPosition =  boundsPosition' newPlayer gstate}
   where
-    xComponent  = cos (convert a)
-    yComponent  = sin (convert a)
-    convert a   = a * pi / 180 --convert from degrees to radians
-    newPosition = Point (xComponent * v + x) (yComponent * v + y)
-    boundsPositionX newPosition@(Point x y) | x > maxX = -x
-                                            | x < -maxX = -x
-                                            | otherwise = x
-    boundsPositionY newPosition@(Point x y) | y > maxY = -y
-                                            | y < -maxY = -y
-                                            | otherwise = y
-    maxX = int2Float ( fst (screenSize gstate)) /2
-    maxY = int2Float (snd (screenSize gstate)) /2
+    newPosition = updatePosition' p gstate
+    newPlayer   = p{playerPosition = newPosition}
 
 --Increase and decrease player angle, bounds at 0 and 360
 steerLeft :: Player -> Angle

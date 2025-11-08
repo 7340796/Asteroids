@@ -68,7 +68,9 @@ initialState gen screenSize = GameState { elapsedTime = 0, state = Playing, live
   where 
     player = Player (Point 0 0) (Angle 90) 0 1 30 0
 
-
 class Entity a where
-  updatePosition :: a -> GameState-> a
-  getHitbox :: a -> HitBox
+  getHitbox      :: a -> HitBox
+  position       :: a -> Point
+  direction      :: a -> Angle
+  speed          :: a -> Float
+  size           :: a -> Float

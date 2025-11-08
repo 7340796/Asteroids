@@ -1,10 +1,14 @@
 module Bullet where
 import Model
 import GHC.Float
+import Entity
 
 instance Entity Bullet where
-  updatePosition = updateBulletPosition
   getHitbox bul  = HitBox (bulletSize bul) (bulletPosition bul)
+  position       = bulletPosition
+  size           = bulletSize
+  direction      = bulletDirection
+  speed          = bulletSpeed
 
 updateBullets :: GameState -> GameState
 updateBullets gstate = gstate{bullets = updatedBullets}
@@ -12,20 +16,10 @@ updateBullets gstate = gstate{bullets = updatedBullets}
     updatedBullets = map (`updateBulletPosition` gstate) (bullets (updateLife gstate))
 
 updateBulletPosition :: Bullet -> GameState-> Bullet
-updateBulletPosition bul@(Bullet {bulletSpeed = v, bulletDirection = Angle a, bulletPosition = Point x y}) gstate = bul{bulletPosition = Point (boundsPositionX newPosition) (boundsPositionY newPosition)}
+updateBulletPosition bul gstate = bul{bulletPosition = boundsPosition' updatedbullet gstate}
   where
-    xComponent  = cos (convert a)
-    yComponent  = sin (convert a)
-    convert a   = a * pi / 180       --convert from degrees to radians
-    newPosition = Point (xComponent * v + x) (yComponent * v + y)
-    boundsPositionX newPosition@(Point x y) | x > maxX = -x
-                                            | x < -maxX = -x
-                                            | otherwise = x
-    boundsPositionY newPosition@(Point x y) | y > maxY = -y
-                                            | y < -maxY = -y
-                                            | otherwise = y
-    maxX        = int2Float ( fst (screenSize gstate)) /2
-    maxY        = int2Float (snd (screenSize gstate)) /2
+    updatedbullet = bul{bulletPosition = newPosition}
+    newPosition = updatePosition' bul gstate
 
 --Spawn a bullet with the same direction the player is looking
 spawnPlayerBullet :: GameState -> Bullet

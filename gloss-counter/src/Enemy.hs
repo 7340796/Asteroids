@@ -4,10 +4,15 @@ import Model
 import GHC.Float (int2Float, acos, float2Int)
 import Bullet
 import Data.Maybe (mapMaybe)
+import Entity
 
 instance Entity Enemy where
-  updatePosition = updateEnemyPosition
   getHitbox e    = HitBox (enemySize e) (enemyPosition e)
+  position       = enemyPosition
+  speed          = enemySpeed
+  size           = enemySize
+  direction      = enemyDirection
+
 
 --Add all shot bullets to the gamestate bullet list
 shootForAll :: GameState -> GameState
@@ -30,12 +35,7 @@ updateEnemies gstate | null (asteroids gstate) && elapsedTime gstate > 0.1 = gst
     updatedEnemies = map (\x ->  updateTimer (updateEnemyPosition (updateEnemyDirection x gstate) gstate)) (enemies gstate)
 
 updateEnemyPosition :: Enemy -> GameState -> Enemy
-updateEnemyPosition en@(Enemy {enemyPosition = (Point x y), enemyDirection = Angle a, enemySpeed = v}) gstate = en{enemyPosition = newPosition}
-    where
-      xComponent  = cos (convert a)
-      yComponent  = sin (convert a)
-      convert a   = a * pi / 180 --convert from degrees to radians
-      newPosition = Point (xComponent * v + x) (yComponent * v + y)
+updateEnemyPosition en gstate = en{enemyPosition = updatePosition' en gstate}
 
 --Follow the player
 updateEnemyDirection :: Enemy -> GameState -> Enemy

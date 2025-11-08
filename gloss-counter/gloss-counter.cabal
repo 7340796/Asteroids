@@ -25,4 +25,5 @@ executable gloss-counter
                      , Collisions
                      , Highscore
                      , Animations
+                     , Entity
   default-language:    Haskell2010
