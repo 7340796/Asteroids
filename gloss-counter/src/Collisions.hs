@@ -39,7 +39,7 @@ fooHelper :: Entity e => Asteroid -> [e] -> Maybe Asteroid
 fooHelper ast es = case (predicate) of 
                     True  -> Nothing
                     False -> do
-                               --Animation? 
+                               --Animation? Misschien de asteroid toevoegen aan een lijst (net als bij de button presses) zodat je dan een animation kan doen ergens?
                              Just ast
   where
     predicate = none (collidesWith ast) es --True when no entity hits the asteroid
