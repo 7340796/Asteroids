@@ -39,7 +39,9 @@ fooHelper :: Entity e => Asteroid -> [e] -> Maybe Asteroid
 fooHelper ast es = case (predicate) of 
                     True  -> Nothing
                     False -> do
-                               --Animation? Misschien de asteroid toevoegen aan een lijst (net als bij de button presses) zodat je dan een animation kan doen ergens?
+                               --Ik dacht dat we dan hier de asteroid aan een set of lijst kunnen toevoegen, zodat je er over meerdere frames bij kan in bijv. de animation class
+                               --Dan kan je daar een functie animateAsteroid maken, en die mappen over de lijst, zodat je voor elke dode asteroid de animatie update.
+                               --Als de animatie dan voorbij is, kan je hem uit de lijst halen en is ie officieel dood. Vond ik wel een goed idee.
                              Just ast
   where
     predicate = none (collidesWith ast) es --True when no entity hits the asteroid
