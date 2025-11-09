@@ -8,13 +8,15 @@ import Enemy
 import Asteroid
 import Entity
 import Data.Set (fromList, toList)
+import Data.Express.Utils.List (none, nub)
+import Data.Maybe
 
 --newList gives back all items that did not collide. If the player collides with something, they lose a life. When all lives are lost, the gamestate is changed to the gameover state.
 checkForCollisions :: GameState -> GameState
 checkForCollisions gstate | lives gstate > 0 = gstate{asteroids = newAsteroidList, bullets = newBulletList, score = newScore, lives = newLives, enemies = newEnemyList, player = newPlayer}
                           | otherwise = gstate{state = GameOver}
   where
-    newAsteroidList = filter (\x -> not $ any (\y -> collidesWith y x) (bullets gstate)) (asteroids gstate) \\ filter (collidesWith (player gstate)) (asteroids gstate)
+    newAsteroidList = foo (asteroids gstate) gstate --filter (\x -> not $ any (\y -> collidesWith y x) (bullets gstate)) (asteroids gstate) \\ filter (collidesWith (player gstate)) (asteroids gstate)
     newBulletList   = filter (\x -> not $ any (\y -> collidesWith x y || collidesWith x (player gstate)) (asteroids gstate)) (bullets gstate)
     newScore        | length newAsteroidList < length (asteroids gstate) = (score gstate) + 20
                     | length newEnemyList < length (enemies gstate)      = (score gstate) + 20
@@ -25,3 +27,21 @@ checkForCollisions gstate | lives gstate > 0 = gstate{asteroids = newAsteroidLis
                     | otherwise               = player gstate  
     newEnemyList    = filter (\x -> not $ any (\y -> collidesWith y x) (bullets gstate)) (enemies gstate)
 
+--Remove all asteroids that get hit from the asteroid list
+foo :: [Asteroid] -> GameState -> [Asteroid]
+foo asts gstate = asts \\ (nub (collidesWithPlayer ++ collidesWithBullets))
+  where
+    collidesWithPlayer  = mapMaybe (\x -> fooHelper x [player gstate]) asts
+    collidesWithBullets = mapMaybe (\x -> fooHelper x (bullets gstate)) asts
+
+--Returns the asteroid if it gets hit by the entity
+fooHelper :: Entity e => Asteroid -> [e] -> Maybe Asteroid
+fooHelper ast es = case (predicate) of 
+                    True  -> Nothing
+                    False -> do
+                               --Animation? 
+                             Just ast
+  where
+    predicate = none (collidesWith ast) es --True when no entity hits the asteroid
+
+  
