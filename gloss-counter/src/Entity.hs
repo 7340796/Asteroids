@@ -1,6 +1,7 @@
 module Entity where
 import GHC.Float (int2Float)
 import Model
+import BoundingBox
 
 updatePosition' :: Entity e => e -> GameState -> Point
 updatePosition' e gstate = Point (xComponent * v + x) (yComponent * v + y)
@@ -23,3 +24,6 @@ boundsPosition' e gstate = Point (boundsPositionX (position e)) (boundsPositionY
                                             | otherwise = y
     maxX = int2Float ( fst (screenSize gstate)) /2
     maxY = int2Float (snd (screenSize gstate)) /2
+
+collidesWith :: (Entity e, Entity e') => e -> e' -> Bool
+collidesWith e1 e2 = doesIntersect (getHitbox e1) (getHitbox e2)  

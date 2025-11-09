@@ -23,8 +23,7 @@ moveForward gstate = gstate {asteroids = map (`updateAsteroidPosition` gstate) (
 updateAsteroidPosition :: Asteroid -> GameState -> Asteroid
 updateAsteroidPosition ast gstate = ast{asteroidPosition =  boundsPosition' newAst gstate}
     where
-    newAst = ast{asteroidPosition = newPosition}
-    newPosition = updatePosition' ast gstate
+    newAst = ast{asteroidPosition = updatePosition' ast gstate}
 
 generateRandomAsteroid :: StdGen -> (Asteroid, StdGen)
 generateRandomAsteroid g =

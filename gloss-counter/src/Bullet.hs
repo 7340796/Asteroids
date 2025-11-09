@@ -18,8 +18,7 @@ updateBullets gstate = gstate{bullets = updatedBullets}
 updateBulletPosition :: Bullet -> GameState-> Bullet
 updateBulletPosition bul gstate = bul{bulletPosition = boundsPosition' updatedbullet gstate}
   where
-    updatedbullet = bul{bulletPosition = newPosition}
-    newPosition = updatePosition' bul gstate
+    updatedbullet = bul{bulletPosition = updatePosition' bul gstate}
 
 --Spawn a bullet with the same direction the player is looking
 spawnPlayerBullet :: GameState -> Bullet
