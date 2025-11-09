@@ -45,7 +45,7 @@ playerAccelerate :: Player -> Player
 playerAccelerate p@(Player {playerSpeed = v}) = p{playerSpeed = newSpeed}
   where
     newSpeed       | v < maxSpeed = v + acceleration p
-                   | otherwise = v
+                   | otherwise    = v
     maxSpeed       = 10
     
 --Set the new player position

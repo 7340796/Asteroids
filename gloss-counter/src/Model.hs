@@ -51,18 +51,18 @@ data HitBox = HitBox Float Point
   deriving (Show, Eq)
 
 data GameState = GameState {
-                   elapsedTime :: Float
-                 , state       :: State
-                 , lives       :: Int
-                 , score       :: Int 
-                 , player      :: Player 
-                 , asteroids   :: [Asteroid]
-                 , enemies     :: [Enemy]
-                 , bullets     :: [Bullet]
-                 , keys        :: S.Set Key
-                 , toggleKeys  :: S.Set Key
-                 , rg          :: StdGen
-                 , screenSize  :: (Int, Int)
+                   elapsedTime   :: Float
+                 , state         :: State
+                 , lives         :: Int
+                 , score         :: Int 
+                 , player        :: Player 
+                 , asteroids     :: [Asteroid]
+                 , enemies       :: [Enemy]
+                 , bullets       :: [Bullet]
+                 , keys          :: S.Set Key
+                 , toggleKeys    :: S.Set Key
+                 , rg            :: StdGen
+                 , screenSize    :: (Int, Int)
                  , deadAsteroids :: [Asteroid]
                  }
 

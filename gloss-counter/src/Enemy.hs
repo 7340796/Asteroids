@@ -52,6 +52,6 @@ updateEnemyDirection en@(Enemy {enemyDirection = Angle a, enemyPosition = enemyP
 spawnEnemy :: GameState -> Enemy
 spawnEnemy gstate = Enemy {enemyPosition = spawnPosition, enemyDirection = Angle 90, enemySpeed = 2, enemySize = 20, shootTimer = 0}
    where
-    xSpawn =  int2Float (fst (screenSize gstate)) / 2
-    ySpawn =  int2Float (snd (screenSize gstate)) / 2
+    xSpawn        =  int2Float (fst (screenSize gstate)) / 2
+    ySpawn        =  int2Float (snd (screenSize gstate)) / 2
     spawnPosition = Point xSpawn ySpawn

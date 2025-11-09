@@ -7,9 +7,10 @@ readHighscore = do
 
 writeHighscore :: Int -> IO()
 writeHighscore score = do
-    oldScore <- readHighscore
-    if score > oldScore then writeFile "content/highscore.txt" (show score)
-    else return ()
+                         oldScore <- readHighscore
+                         if score > oldScore 
+                           then writeFile "content/highscore.txt" (show score)
+                         else return ()
 
 readInt :: String -> Int
 readInt = read 

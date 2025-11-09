@@ -19,25 +19,26 @@ import Animations
 step :: Float -> GameState -> IO GameState
 step secs gstate
   = do
-    let
-      newState = (pause.asteroidExplode (elapsedTime gstate)) gstate{elapsedTime = elapsedTime gstate + secs}
-    case state newState of
-      Playing  -> return $ checkForCollisions ((updateBullets.updateAsteroids.updateEnemies.updatePlayer) newState)
-      GameOver -> putHighScore (shrinkPlayer (elapsedTime newState) newState)
-      Paused   -> return newState
+      let 
+        newState = (pause.asteroidExplode (elapsedTime gstate)) gstate{elapsedTime = elapsedTime gstate + secs} 
+      case state newState of
+        Playing  -> return $ checkForCollisions ((updateBullets.updateAsteroids.updateEnemies.updatePlayer) newState)
+        GameOver -> putHighScore (shrinkPlayer (elapsedTime newState) newState)
+        Paused   -> return newState
 
 putHighScore :: GameState -> IO GameState
 putHighScore gstate = do
-  writeHighscore (score gstate)
-  return gstate
-
-stateChange :: GameState -> GameState
-stateChange gstate | lives gstate <= 0 = gstate{state = GameOver}
-                   | otherwise = gstate {state = Playing}
+                        writeHighscore (score gstate)
+                        return gstate
 
 pause :: GameState -> GameState
 pause gstate | S.member (SpecialKey KeyEsc) (toggleKeys gstate) = gstate{state = Paused}
              | otherwise                                        = stateChange gstate
+
+stateChange :: GameState -> GameState
+stateChange gstate | lives gstate <= 0 = gstate{state = GameOver}
+                   | otherwise         = gstate {state = Playing}
+
 --Handle user input
 input :: Event -> GameState -> IO GameState
 input e gstate = return (handleInput e gstate)
