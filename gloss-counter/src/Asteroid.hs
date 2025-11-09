@@ -34,7 +34,7 @@ generateRandomAsteroid g =
     (y, gen4) = randomR (0, 10) gen3
     (s, gen5) = randomR (30, 60) gen4
   in
-    ((Asteroid {asteroidSpeed = v, asteroidDirection = Angle (a * 36), asteroidPosition = Point (x*40) (y*40), asteroidSize = s}), gen5)
+    ((Asteroid {asteroidSpeed = v, asteroidDirection = Angle (a * 36), asteroidPosition = Point (x*40) (y*40), asteroidSize = s, animationTimerAst = 0}), gen5)
 
 generateRandomAsteroidList :: StdGen -> Int -> [Asteroid]
 generateRandomAsteroidList _ 0 = []
