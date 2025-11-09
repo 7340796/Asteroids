@@ -1,6 +1,7 @@
 module Animations where
 import Model
 import Data.Fixed
+import Data.Maybe (mapMaybe)
 
 shrinkPlayer :: Float -> GameState -> GameState
 shrinkPlayer seconds gstate = gstate{player = newPlayer}
@@ -12,3 +13,10 @@ shrinkPlayer seconds gstate = gstate{player = newPlayer}
         time = seconds - animationTimer (player gstate)            --How long the animation is playing
         newSize | time /= 0 && (playerSize curPlayer >= 0)= playerSize curPlayer -1
                 | otherwise = playerSize curPlayer
+
+asteroidExplode :: Float -> GameState -> GameState
+asteroidExplode seconds gstate = gstate{deadAsteroids = newDeadAsteroids}
+  where
+    newDeadAsteroids = mapMaybe updateTimer (deadAsteroids gstate)
+    updateTimer ast  | animationTimerAst ast < 30 = Just ast{animationTimerAst = (animationTimerAst ast) + 1}
+                     | otherwise             = Nothing

@@ -20,7 +20,7 @@ step :: Float -> GameState -> IO GameState
 step secs gstate
   = do
     let
-      newState = (pause) gstate{elapsedTime = elapsedTime gstate + secs}
+      newState = (pause.asteroidExplode (elapsedTime gstate)) gstate{elapsedTime = elapsedTime gstate + secs}
     case state newState of
       Playing  -> return $ checkForCollisions ((updateBullets.updateAsteroids.updateEnemies.updatePlayer) newState)
       GameOver -> putHighScore (shrinkPlayer (elapsedTime newState) newState)

@@ -31,10 +31,12 @@ data Bullet = Bullet {
              }
   deriving(Show, Eq)
 data Asteroid = Asteroid {
-                asteroidPosition  :: Point
-              , asteroidDirection :: Angle
-              , asteroidSpeed     :: Float
-              , asteroidSize      :: Float 
+                asteroidPosition      :: Point
+              , asteroidDirection     :: Angle
+              , asteroidSpeed         :: Float
+              , asteroidSize          :: Float 
+              , animationTimerAst     :: Float 
+
              } 
   deriving (Show, Eq)
 data Point  = Point Float Float
@@ -61,10 +63,11 @@ data GameState = GameState {
                  , toggleKeys  :: S.Set Key
                  , rg          :: StdGen
                  , screenSize  :: (Int, Int)
+                 , deadAsteroids :: [Asteroid]
                  }
 
 initialState :: StdGen -> (Int, Int) -> GameState
-initialState gen screenSize = GameState { elapsedTime = 0, state = Playing, lives = 3, score = 0, player = player, asteroids = [], enemies = [], bullets = [], keys = S.empty, toggleKeys = S.empty, rg = gen, screenSize = screenSize }
+initialState gen screenSize = GameState { elapsedTime = 0, state = Playing, lives = 3, score = 0, player = player, asteroids = [], enemies = [], bullets = [], keys = S.empty, toggleKeys = S.empty, rg = gen, screenSize = screenSize, deadAsteroids = [] }
   where 
     player = Player (Point 0 0) (Angle 90) 0 1 30 0
 
